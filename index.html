@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>E-Catalog Wholesale</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    /* ─── CART SIDEBAR ─────────────────────────────── */
+    .cart-sidebar-backdrop {
+      display: none;
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.25);
+      z-index: 800;
+    }
+    .cart-sidebar-backdrop.open { display: block; }
+
+    .cart-sidebar {
+      position: fixed;
+      top: 0; right: 0;
+      width: 380px; height: 100vh;
+      background: white;
+      box-shadow: -4px 0 24px rgba(0,0,0,0.12);
+      z-index: 900;
+      display: flex; flex-direction: column;
+      transform: translateX(100%);
+      transition: transform 0.28s cubic-bezier(.4,0,.2,1);
+    }
+    .cart-sidebar.open { transform: translateX(0); }
+
+    .cs-header {
+      display: flex; align-items: center; gap: 10px;
+      padding: 16px 18px;
+      border-bottom: 1px solid #F3F4F6;
+      flex-shrink: 0;
+    }
+    .cs-header-icon {
+      width: 32px; height: 32px;
+      background: #EFF6FF; border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .cs-title { font-weight: 700; font-size: 16px; color: #111827; flex: 1; }
+    .cs-badge {
+      background: var(--primary-blue); color: white;
+      border-radius: 50%; width: 22px; height: 22px;
+      font-size: 11px; font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .cs-close {
+      background: none; border: none; cursor: pointer;
+      font-size: 20px; color: #9CA3AF;
+      width: 28px; height: 28px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .cs-close:hover { color: #374151; }
+
+    /* Customer row */
+    .cs-customer {
+      margin: 12px; border-radius: 10px;
+      background: #F0F7FF;
+      padding: 10px 12px;
+      display: flex; align-items: center; gap: 10px;
+      flex-shrink: 0;
+    }
+    .cs-customer-avatar {
+      width: 36px; height: 36px; border-radius: 50%;
+      background: var(--primary-blue);
+      display: flex; align-items: center; justify-content: center;
+      color: white; font-weight: 700; font-size: 14px; flex-shrink: 0;
+    }
+    .cs-customer-info { flex: 1; min-width: 0; }
+    .cs-customer-name { font-weight: 600; font-size: 13px; color: #111827; }
+    .cs-customer-meta { font-size: 11px; color: #6B7280; }
+    .cs-discount-badge {
+      background: #DCFCE7; color: #16A34A;
+      border-radius: 12px; padding: 2px 8px;
+      font-size: 11px; font-weight: 700; flex-shrink: 0;
+    }
+    .cs-no-customer {
+      margin: 12px; border-radius: 10px;
+      border: 2px dashed #E5E7EB;
+      padding: 14px; text-align: center;
+      color: #9CA3AF; font-size: 13px; cursor: pointer;
+    }
+    .cs-no-customer:hover { border-color: var(--primary-blue); color: var(--primary-blue); }
+
+    /* Product list */
+    .cs-products {
+      flex: 1; overflow-y: auto;
+      padding: 0 12px;
+    }
+    .cs-product-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 12px 0;
+      border-bottom: 1px solid #F3F4F6;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .cs-product-item:hover { background: #FAFAFA; margin: 0 -12px; padding: 12px; }
+    .cs-product-thumb {
+      width: 48px; height: 48px; border-radius: 8px;
+      background: #F9FAFB; border: 1px solid #E5E7EB;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px; flex-shrink: 0; overflow: hidden;
+    }
+    .cs-product-thumb img { width: 100%; height: 100%; object-fit: cover; }
+    .cs-product-info { flex: 1; min-width: 0; }
+    .cs-product-name { font-size: 13px; font-weight: 600; color: #111827; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .cs-product-sku { font-size: 11px; color: #9CA3AF; }
+    .cs-product-qty { font-size: 12px; color: #6B7280; margin-top: 2px; }
+    .cs-product-arrow { color: #D1D5DB; font-size: 16px; flex-shrink: 0; }
+    .cs-empty {
+      padding: 40px 0; text-align: center; color: #9CA3AF; font-size: 13px;
+    }
+
+    /* Fields */
+    .cs-fields {
+      padding: 12px;
+      border-top: 1px solid #F3F4F6;
+      flex-shrink: 0;
+    }
+    .cs-field {
+      display: flex; align-items: center; gap: 8px;
+      margin-bottom: 8px;
+    }
+    .cs-field-label { font-size: 12px; color: #9CA3AF; white-space: nowrap; }
+    .cs-field-input {
+      flex: 1; border: none; border-bottom: 1px solid #E5E7EB;
+      font-size: 13px; color: #374151; padding: 4px 0;
+      background: none; font-family: inherit;
+    }
+    .cs-field-input:focus { outline: none; border-color: var(--primary-blue); }
+    .cs-field-input::placeholder { color: #D1D5DB; }
+    .cs-notes {
+      width: 100%;
+      border: 1px solid #E5E7EB; border-radius: 6px;
+      padding: 8px 10px; font-size: 13px; font-family: inherit;
+      color: #374151; resize: none; margin-top: 4px;
+    }
+    .cs-notes:focus { outline: none; border-color: var(--primary-blue); }
+
+    /* Summary */
+    .cs-summary { padding: 12px; border-top: 1px solid #F3F4F6; flex-shrink: 0; }
+    .cs-summary-meta { font-size: 12px; color: #9CA3AF; margin-bottom: 6px; }
+    .cs-summary-row { display: flex; justify-content: space-between; font-size: 13px; color: #6B7280; margin-bottom: 4px; }
+    .cs-summary-total { display: flex; justify-content: space-between; font-size: 15px; font-weight: 700; color: #111827; margin-top: 8px; }
+    .cs-summary-total span:last-child { color: var(--primary-blue); }
+
+    /* Actions */
+    .cs-actions { padding: 12px; border-top: 1px solid #F3F4F6; flex-shrink: 0; }
+    .cs-btn-quote {
+      width: 100%; padding: 12px;
+      background: var(--primary-blue); color: white;
+      border: none; border-radius: 8px; font-weight: 700; font-size: 14px;
+      cursor: pointer; margin-bottom: 8px;
+      display: flex; align-items: center; justify-content: center; gap: 6px;
+      transition: background 0.2s;
+    }
+    .cs-btn-quote:hover { background: var(--dark-blue); }
+    .cs-btn-order {
+      width: 100%; padding: 12px;
+      background: #1a1a2e; color: white;
+      border: none; border-radius: 8px; font-weight: 700; font-size: 14px;
+      cursor: pointer; margin-bottom: 10px;
+      display: flex; align-items: center; justify-content: center; gap: 6px;
+      transition: background 0.2s;
+    }
+    .cs-btn-order:hover { background: #111; }
+    .cs-secondary-actions { display: flex; justify-content: space-between; }
+    .cs-btn-zalo {
+      background: none; border: none; cursor: pointer;
+      font-size: 12px; color: #6B7280;
+      display: flex; align-items: center; gap: 4px;
+    }
+    .cs-btn-zalo:hover { color: var(--primary-blue); }
+    .cs-btn-delete {
+      background: none; border: none; cursor: pointer;
+      font-size: 12px; color: #EF4444;
+      display: flex; align-items: center; gap: 4px;
+    }
+    .cs-btn-delete:hover { color: #DC2626; }
+
+    /* ─── PRODUCT DETAIL MODAL ─────────────────────── */
+    #productModal .modal-content {
+      width: min(1200px, 96vw);
+      max-height: 92vh;
+      display: flex;
+      flex-direction: column;
+      padding: 0;
+      overflow: hidden;
+    }
+
+    /* Modal header bar */
+    .pm-header {
+      display: flex; align-items: center; gap: 10px;
+      padding: 14px 20px;
+      border-bottom: 1px solid #F3F4F6;
+      flex-shrink: 0;
+    }
+    .pm-badge-hot {
+      background: #FEF3C7; color: #D97706;
+      border: 1px solid #FCD34D; border-radius: 20px;
+      font-size: 11px; font-weight: 700; padding: 2px 8px;
+    }
+    .pm-sku { font-size: 12px; color: #9CA3AF; }
+    .pm-name { font-size: 16px; font-weight: 700; color: #111827; }
+    .pm-close {
+      margin-left: auto; background: none; border: none;
+      font-size: 22px; cursor: pointer; color: #9CA3AF; line-height: 1;
+    }
+    .pm-close:hover { color: #374151; }
+
+    /* Modal body */
+    .pm-body {
+      display: grid; grid-template-columns: 480px 1fr;
+      flex: 1; overflow: hidden;
+    }
+
+    /* Left: image */
+    .pm-image-panel {
+      padding: 24px;
+      border-right: 1px solid #F3F4F6;
+      display: flex; flex-direction: column; gap: 12px;
+      background: #FAFAFA;
+    }
+    .pm-main-image {
+      flex: 1; border-radius: 12px; overflow: hidden;
+      background: white;
+      display: flex; align-items: center; justify-content: center;
+      min-height: 300px; max-height: 400px;
+    }
+    .pm-main-image img { width: 100%; height: 100%; object-fit: contain; }
+    /* (thumbnails removed — replaced by specs table) */
+
+    /* Right: detail */
+    .pm-detail-panel {
+      display: flex; flex-direction: column; overflow: hidden;
+    }
+
+    /* Tabs */
+    .pm-tabs {
+      display: flex; align-items: center; gap: 0;
+      padding: 12px 20px;
+      border-bottom: 1px solid #F3F4F6;
+      flex-shrink: 0;
+    }
+    .pm-tab {
+      padding: 7px 18px; border-radius: 20px;
+      font-size: 13px; font-weight: 600; cursor: pointer;
+      border: 2px solid #E5E7EB; background: white; color: #6B7280;
+      margin-right: 8px; transition: all 0.15s;
+    }
+    .pm-tab.active {
+      background: var(--primary-blue); color: white; border-color: var(--primary-blue);
+    }
+    .pm-tab-hint { font-size: 12px; color: #9CA3AF; margin-left: 4px; }
+
+    /* ── MUA LẺ ─────────────────────────────────────── */
+    .pm-retail-panel { flex: 1; overflow-y: auto; padding: 20px; }
+    .pm-retail-section { margin-bottom: 20px; }
+    .pm-retail-label { font-size: 12px; font-weight: 700; color: #374151; margin-bottom: 10px; display: flex; align-items: center; gap: 6px; }
+    .pm-color-pills { display: flex; gap: 8px; flex-wrap: wrap; }
+    .pm-color-pill {
+      display: flex; align-items: center; gap: 6px;
+      padding: 6px 12px; border-radius: 20px;
+      border: 2px solid #E5E7EB; cursor: pointer;
+      font-size: 13px; font-weight: 500; transition: all 0.15s;
+    }
+    .pm-color-pill:hover { border-color: var(--primary-blue); }
+    .pm-color-pill.active { border-color: var(--primary-blue); background: #EFF6FF; }
+    .pm-color-dot { width: 14px; height: 14px; border-radius: 50%; }
+    .pm-size-grid { display: flex; gap: 8px; flex-wrap: wrap; }
+    .pm-size-btn {
+      width: 48px; height: 48px; border-radius: 8px;
+      border: 2px solid #E5E7EB; cursor: pointer;
+      font-size: 13px; font-weight: 600; background: white;
+      transition: all 0.15s; display: flex; flex-direction: column;
+      align-items: center; justify-content: center; gap: 1px;
+    }
+    .pm-size-btn .size-stock { font-size: 9px; color: #10B981; font-weight: 400; }
+    .pm-size-btn:hover { border-color: var(--primary-blue); }
+    .pm-size-btn.active { border-color: var(--primary-blue); background: var(--primary-blue); color: white; }
+    .pm-size-btn.active .size-stock { color: rgba(255,255,255,0.8); }
+    .pm-retail-qty { display: flex; align-items: center; gap: 10px; }
+    .pm-qty-btn {
+      width: 36px; height: 36px; border-radius: 8px;
+      border: 1px solid #E5E7EB; cursor: pointer;
+      font-size: 18px; font-weight: 600; background: white;
+      display: flex; align-items: center; justify-content: center;
+      transition: all 0.15s;
+    }
+    .pm-qty-btn:hover { border-color: var(--primary-blue); color: var(--primary-blue); }
+    .pm-qty-input {
+      width: 60px; text-align: center; font-size: 15px; font-weight: 700;
+      border: 1px solid #E5E7EB; border-radius: 8px; padding: 8px 0;
+    }
+    .pm-qty-input:focus { outline: none; border-color: var(--primary-blue); }
+    .pm-price-box {
+      background: #F0F7FF; border-radius: 10px; padding: 12px 16px;
+      display: flex; justify-content: space-between; align-items: center;
+      margin-top: 16px;
+    }
+    .pm-price-label { font-size: 13px; color: #6B7280; }
+    .pm-price-value { font-size: 20px; font-weight: 800; color: var(--primary-blue); }
+
+    /* ── MUA SỈ TABLE ───────────────────────────────── */
+    .pm-wholesale-panel { flex: 1; overflow: hidden; display: flex; flex-direction: column; }
+
+    /* Color filter pills */
+    .pm-filter-row {
+      display: flex; align-items: center; gap: 8px;
+      padding: 12px 20px;
+      border-bottom: 1px solid #F3F4F6;
+      flex-shrink: 0; flex-wrap: wrap;
+    }
+    .pm-filter-pill {
+      padding: 5px 12px; border-radius: 20px;
+      font-size: 12px; font-weight: 600; cursor: pointer;
+      border: 2px solid #E5E7EB; background: white; color: #374151;
+      display: flex; align-items: center; gap: 5px;
+      transition: all 0.15s;
+    }
+    .pm-filter-pill:hover { border-color: var(--primary-blue); }
+    .pm-filter-pill.active { background: var(--primary-blue); color: white; border-color: var(--primary-blue); }
+    .pm-filter-dot { width: 10px; height: 10px; border-radius: 50%; }
+    .pm-view-toggle { margin-left: auto; display: flex; gap: 4px; }
+    .pm-view-btn {
+      width: 30px; height: 30px; border-radius: 6px;
+      border: 1px solid #E5E7EB; background: white; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      color: #9CA3AF; font-size: 14px; transition: all 0.15s;
+    }
+    .pm-view-btn.active { background: #EFF6FF; border-color: var(--primary-blue); color: var(--primary-blue); }
+
+    /* Variant table */
+    .pm-variant-table-wrap { flex: 1; overflow-y: auto; }
+    .pm-variant-table { width: 100%; border-collapse: collapse; }
+    .pm-variant-table thead th {
+      font-size: 10px; font-weight: 700; color: #9CA3AF;
+      letter-spacing: 0.5px; text-transform: uppercase;
+      padding: 8px 12px; text-align: left;
+      background: #F9FAFB; border-bottom: 1px solid #E5E7EB;
+      position: sticky; top: 0; z-index: 1;
+    }
+    .pm-variant-table thead th.right { text-align: right; }
+    .pm-variant-table thead th.center { text-align: center; }
+    .pm-variant-table tbody tr {
+      border-bottom: 1px solid #F9FAFB;
+      transition: background 0.1s;
+    }
+    .pm-variant-table tbody tr:hover { background: #FAFAFA; }
+    .pm-variant-table tbody tr.selected { background: #EFF6FF; }
+    .pm-variant-table td { padding: 10px 12px; font-size: 13px; color: #374151; }
+    .pm-variant-table td.sku { font-family: monospace; font-size: 11px; color: #9CA3AF; }
+    .pm-variant-table td.stock-avail { color: #10B981; font-weight: 600; font-size: 12px; }
+    .pm-variant-table td.stock-low { color: #F59E0B; font-weight: 600; font-size: 12px; }
+    .pm-variant-table td.price-cell { color: var(--primary-blue); font-weight: 700; text-align: right; }
+    .pm-variant-table td.qty-cell { text-align: right; }
+    .table-color-dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; margin-right: 5px; }
+    .table-qty-ctrl { display: flex; align-items: center; justify-content: flex-end; gap: 4px; }
+    .tqc-btn {
+      width: 24px; height: 24px; border-radius: 5px;
+      border: 1px solid #E5E7EB; background: white; cursor: pointer;
+      font-size: 13px; font-weight: 700; display: flex; align-items: center;
+      justify-content: center; color: #374151; transition: all 0.15s;
+    }
+    .tqc-btn:hover { border-color: var(--primary-blue); color: var(--primary-blue); }
+    .tqc-num {
+      width: 32px; text-align: center; font-size: 13px; font-weight: 600;
+      border: none; background: none; color: #111827;
+    }
+    .tqc-num:focus { outline: none; }
+    .tqc-num.positive { color: var(--primary-blue); }
+
+    /* Modal footer */
+    .pm-footer {
+      display: flex; align-items: center; gap: 12px;
+      padding: 14px 20px;
+      border-top: 1px solid #E5E7EB;
+      background: white;
+      flex-shrink: 0;
+    }
+    .pm-footer-summary { flex: 1; }
+    .pm-footer-meta { font-size: 12px; color: #9CA3AF; margin-bottom: 3px; }
+    .pm-footer-price { font-size: 16px; font-weight: 800; color: var(--primary-blue); }
+    .pm-footer-price span { color: #111827; }
+    .pm-btn-close { padding: 10px 20px; border-radius: 8px; border: 1px solid #D1D5DB; background: white; font-weight: 600; font-size: 13px; cursor: pointer; transition: all 0.2s; }
+    .pm-btn-close:hover { border-color: #9CA3AF; }
+    .pm-btn-quote-add { padding: 10px 20px; border-radius: 8px; border: none; background: #EFF6FF; color: var(--primary-blue); font-weight: 700; font-size: 13px; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: all 0.2s; }
+    .pm-btn-quote-add:hover { background: #DBEAFE; }
+    .pm-btn-quote-add:disabled { opacity: 0.4; cursor: not-allowed; }
+    .pm-btn-order-create { padding: 10px 24px; border-radius: 8px; border: none; background: var(--primary-blue); color: white; font-weight: 700; font-size: 13px; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: all 0.2s; }
+    .pm-btn-order-create:hover { background: var(--dark-blue); }
+    .pm-btn-order-create:disabled { background: #D1D5DB; cursor: not-allowed; }
+
+    /* iPad product modal */
+    @media (max-width: 1024px) {
+      #productModal .modal-content { width: 96vw; max-height: 96vh; }
+      .pm-body { grid-template-columns: 1fr; }
+      .pm-image-panel {
+        border-right: none; border-bottom: 1px solid #F3F4F6;
+        padding: 16px; flex-direction: row; align-items: center; gap: 16px;
+      }
+      .pm-main-image { min-height: 200px; max-height: 240px; flex: 1; }
+      .pm-header { padding: 12px 16px; }
+      .pm-name { font-size: 15px; }
+      .pm-tabs { padding: 10px 16px; }
+      .pm-tab { padding: 10px 20px; font-size: 14px; }
+      .pm-retail-panel { padding: 16px; }
+      .pm-color-pill { padding: 8px 14px; font-size: 14px; }
+      .pm-size-btn { width: 56px; height: 56px; font-size: 15px; }
+      .pm-qty-btn { width: 44px; height: 44px; font-size: 20px; }
+      .pm-qty-input { width: 64px; font-size: 16px; padding: 10px 0; }
+      .pm-footer { padding: 12px 16px; }
+      .pm-btn-close, .pm-btn-order-create { padding: 12px 20px; font-size: 14px; }
+      .pm-filter-row { padding: 10px 16px; }
+      .pm-filter-pill { padding: 8px 14px; font-size: 13px; }
+      .tqc-btn { width: 32px; height: 32px; font-size: 15px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="header-logo" style="font-size:13px;line-height:1.2;display:flex;flex-direction:column;">
+    <span style="font-weight:800;font-size:16px;">E-Catalog</span>
+    <span style="font-size:10px;opacity:0.7;letter-spacing:0.5px;">WHOLESALE</span>
+  </div>
+  <div class="header-search">
+    <input type="text" id="searchInput" placeholder="Tìm mã mẫu, tên sản phẩm hoặc SKU...">
+  </div>
+  <div class="header-divider"></div>
+  <div class="header-actions">
+    <div id="btnSelectCustomer" style="display:none;position:relative;">
+      <button class="btn-select-customer" onclick="toggleHeaderCustomerDD(event)">
+        <span>👤</span>
+        <span id="btnCustomerLabel">Chọn khách hàng</span>
+        <span style="font-size:10px;opacity:.6;">▾</span>
+      </button>
+      <div id="headerCustomerDD" style="display:none;position:absolute;top:calc(100% + 6px);right:0;background:white;border-radius:10px;box-shadow:0 8px 30px rgba(0,0,0,.15);width:240px;z-index:200;overflow:hidden;animation:ddFadeIn .15s ease-out;">
+        <div style="padding:14px 16px;border-bottom:1px solid #E5E7EB;">
+          <div style="font-size:14px;font-weight:700;color:#111827;" id="ddHeaderName">—</div>
+          <div style="font-size:11px;color:#6B7280;margin-top:3px;" id="ddHeaderMeta"></div>
+        </div>
+        <div style="padding:4px;">
+          <a href="customer.html" style="display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:6px;font-size:13px;color:#374151;text-decoration:none;transition:background .1s;" onmouseover="this.style.background='#F3F4F6'" onmouseout="this.style.background=''">
+            <span style="font-size:16px;width:24px;text-align:center;">📋</span> Xem thông tin
+          </a>
+          <button onclick="changeHeaderCustomer()" style="display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:6px;font-size:13px;color:#374151;border:none;background:none;width:100%;cursor:pointer;transition:background .1s;" onmouseover="this.style.background='#F3F4F6'" onmouseout="this.style.background=''">
+            <span style="font-size:16px;width:24px;text-align:center;">🔄</span> Đổi khách hàng
+          </button>
+        </div>
+      </div>
+    </div>
+    <button class="header-icon-btn" onclick="openCartSidebar()">🛒</button>
+    <button class="header-icon-btn">🔔</button>
+    <div class="header-profile">
+      <div class="profile-avatar">N</div>
+      <span>Nguyễn Văn B</span>
+    </div>
+  </div>
+</header>
+
+
+<!-- MAIN CONTAINER -->
+<div class="container">
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-category">
+      <div class="category-item active" data-cat="all">
+        <div class="category-icon">💍</div>
+        <span>Tất Cả</span>
+        <div class="category-badge">6</div>
+      </div>
+      <div class="category-item" data-cat="bong-tai">
+        <div class="category-icon">💎</div>
+        <span>Bông tai</span>
+      </div>
+      <div class="category-item" data-cat="nhan">
+        <div class="category-icon">⭐</div>
+        <span>Nhẫn</span>
+      </div>
+      <div class="category-item" data-cat="cap-nhan">
+        <div class="category-icon">✨</div>
+        <span>Cặp Nhẫn</span>
+      </div>
+      <div class="category-item" data-cat="day-chuyen">
+        <div class="category-icon">🔗</div>
+        <span>Dây Chuyền</span>
+      </div>
+      <div class="category-item" data-cat="vong-tay">
+        <div class="category-icon">⭕</div>
+        <span>Vòng Tay</span>
+      </div>
+      <div class="category-item" data-cat="mat-day">
+        <div class="category-icon">📎</div>
+        <span>Mặt Dây</span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main class="main-content">
+    <div class="content-header">
+      <span class="loc-label">Lọc:</span>
+      <button class="tab active" data-filter="new">Mới</button>
+      <button class="tab" data-filter="hot">Bán chạy</button>
+      <button class="tab" data-filter="available">Có sẵn</button>
+      <button class="tab" data-filter="pair">Nhận đôi</button>
+      <button class="tab" data-filter="under1m">Dưới 1 triệu</button>
+      <button class="tab" data-filter="low-moq">MOQ thấp</button>
+    </div>
+    <div class="products-container">
+      <div class="products-grid" id="productsGrid">
+        <!-- Rendered by JS -->
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- STICKY CART BUTTON -->
+<div id="stickyCartBtn" style="display:none;" onclick="openCartSidebar()">
+  <div class="sticky-cart-icon-wrap">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+    <span id="cartCount" class="sticky-cart-badge">0</span>
+  </div>
+  <div class="sticky-cart-info">
+    <div class="sticky-cart-order-name" id="stickyOrderName">Đặt hàng 1</div>
+    <div class="sticky-cart-meta" id="stickyCartMeta">0 mẫu</div>
+    <div class="sticky-cart-total" id="stickyCartTotal">Tổng: 0đ</div>
+  </div>
+  <div class="sticky-cart-arrow">›</div>
+</div>
+
+<!-- CART SIDEBAR BACKDROP -->
+<div class="cart-sidebar-backdrop" id="cartBackdrop" onclick="closeCartSidebar()"></div>
+
+<!-- CART SIDEBAR -->
+<div class="cart-sidebar" id="cartSidebar">
+  <div class="cs-header">
+    <div class="cs-header-icon">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0052CC" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+    </div>
+    <div class="cs-title" id="csTitle">Đặt hàng 1</div>
+    <div class="cs-badge" id="csBadge">0</div>
+    <button class="cs-close" onclick="closeCartSidebar()">×</button>
+  </div>
+
+  <!-- Customer -->
+  <div id="csCustomerArea"></div>
+
+  <!-- Products -->
+  <div class="cs-products" id="csProducts"></div>
+
+  <!-- Fields -->
+  <div class="cs-fields">
+    <div class="cs-field">
+      <span class="cs-field-label">🏷 Chiết khấu:</span>
+      <input type="text" class="cs-field-input" id="csDiscount" placeholder="0đ hoặc %">
+    </div>
+    <textarea class="cs-notes" id="csNotes" rows="2" placeholder="Ghi chú đơn hàng..."></textarea>
+  </div>
+
+  <!-- Summary -->
+  <div class="cs-summary" id="csSummary"></div>
+
+  <!-- Actions -->
+  <div class="cs-actions">
+    <button class="cs-btn-order" onclick="goToCheckout()">📦 Tạo đơn đặt hàng</button>
+    <div class="cs-secondary-actions">
+      <button class="cs-btn-zalo">✈ Gửi Zalo / PDF</button>
+      <button class="cs-btn-delete">🗑 Xóa báo giá</button>
+    </div>
+  </div>
+</div>
+
+<!-- CUSTOMER SELECTION MODAL -->
+<div class="modal active" id="customerModal">
+  <div class="modal-content" style="max-width:500px;">
+    <div class="modal-header">
+      <h2 class="modal-title">Chọn khách hàng</h2>
+      <button class="btn-close-modal" onclick="closeCustomerModal()">×</button>
+    </div>
+    <div class="modal-body">
+      <input type="text" id="customerSearch" class="form-control" placeholder="Tìm tên, số điện thoại khách hàng..." style="margin-bottom:12px;">
+      <div id="customerList" style="max-height:420px;overflow-y:auto;"></div>
+    </div>
+  </div>
+</div>
+
+<!-- PRODUCT DETAIL MODAL -->
+<div class="modal" id="productModal">
+  <div class="modal-content">
+    <!-- Header -->
+    <div class="pm-header">
+      <span class="pm-badge-hot" id="pmBadge">Bán chạy</span>
+      <span class="pm-sku" id="pmSku">SKU</span>
+      <span class="pm-name" id="pmName">Tên sản phẩm</span>
+      <button class="pm-close" onclick="closeProductModal()">×</button>
+    </div>
+    <!-- Body -->
+    <div class="pm-body">
+      <!-- Left image -->
+      <div class="pm-image-panel">
+        <div class="pm-main-image">
+          <div id="pmMainImage" style="font-size:80px;line-height:1;">💍</div>
+        </div>
+        <div id="pmProductSpecs" style="width:100%;"></div>
+      </div>
+      <!-- Right detail -->
+      <div class="pm-detail-panel">
+        <!-- Tabs -->
+        <div class="pm-tabs">
+          <button class="pm-tab active" id="tabRetail" onclick="switchPmTab('retail')">Mua lẻ</button>
+          <button class="pm-tab" id="tabWholesale" onclick="switchPmTab('wholesale')">Mua nhanh</button>
+          <span class="pm-tab-hint" id="pmTabHint"></span>
+        </div>
+        <!-- Retail panel -->
+        <div id="pmRetailPanel" class="pm-retail-panel"></div>
+        <!-- Quick-buy panel -->
+        <div id="pmWholesalePanel" class="pm-wholesale-panel" style="display:none;">
+          <div id="pmQuickRows" style="flex:1;overflow-y:auto;padding:16px 20px;"></div>
+        </div>
+      </div>
+    </div>
+    <!-- Footer -->
+    <div class="pm-footer">
+      <div class="pm-footer-summary">
+        <div class="pm-footer-meta" id="pmFooterMeta">0 biến thể · 0 sản phẩm</div>
+        <div class="pm-footer-price">Tạm tính: <span id="pmFooterPrice">0đ</span></div>
+      </div>
+      <button class="pm-btn-close" onclick="closeProductModal()">Đóng</button>
+      <button class="pm-btn-order-create" id="pmBtnCreateOrder" onclick="addToCart(true)">🛒 Thêm vào giỏ</button>
+    </div>
+  </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>E-Catalog - Trang chủ</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    body {
+      background: linear-gradient(135deg, #0052CC 0%, #003DA3 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .splash-screen {
+      text-align: center;
+      color: white;
+      padding: 40px;
+    }
+
+    .splash-logo {
+      font-size: 64px;
+      margin-bottom: 24px;
+      display: inline-block;
+      animation: bounce 2s infinite;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    .splash-title {
+      font-size: 36px;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+
+    .splash-subtitle {
+      font-size: 16px;
+      opacity: 0.9;
+      margin-bottom: 40px;
+    }
+
+    .navigation-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+      max-width: 1000px;
+      margin-top: 40px;
+    }
+
+    .nav-card {
+      background-color: white;
+      border-radius: 12px;
+      padding: 32px;
+      text-align: center;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      text-decoration: none;
+      color: inherit;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .nav-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+    }
+
+    .nav-icon {
+      font-size: 48px;
+      margin-bottom: 16px;
+    }
+
+    .nav-title {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: var(--text-dark);
+    }
+
+    .nav-description {
+      font-size: 13px;
+      color: var(--text-gray);
+      line-height: 1.5;
+    }
+
+    .footer-info {
+      position: fixed;
+      bottom: 20px;
+      left: 0;
+      right: 0;
+      text-align: center;
+      color: white;
+      opacity: 0.8;
+      font-size: 12px;
+    }
+
+    @media (max-width: 768px) {
+      .splash-screen {
+        padding: 20px;
+      }
+
+      .splash-title {
+        font-size: 28px;
+      }
+
+      .navigation-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="splash-screen">
+    <div class="splash-logo">💎</div>
+    <h1 class="splash-title">E-Catalog</h1>
+    <p class="splash-subtitle">Quản lý bán hàng trang sức hiện đại</p>
+
+    <div class="navigation-grid">
+      <!-- Danh sách sản phẩm -->
+      <a href="index.html" class="nav-card">
+        <div class="nav-icon">📦</div>
+        <div class="nav-title">Danh sách sản phẩm</div>
+        <div class="nav-description">Xem và quản lý tất cả sản phẩm trang sức, lọc theo danh mục, tìm kiếm nhanh</div>
+      </a>
+
+      <!-- Giỏ hàng -->
+      <a href="cart.html" class="nav-card">
+        <div class="nav-icon">🛒</div>
+        <div class="nav-title">Giỏ hàng</div>
+        <div class="nav-description">Xem sản phẩm đã chọn, điều chỉnh số lượng, tính tổng giá và thanh toán</div>
+      </a>
+
+      <!-- Thông tin khách hàng -->
+      <a href="customer.html" class="nav-card">
+        <div class="nav-icon">👤</div>
+        <div class="nav-title">Thông tin khách hàng</div>
+        <div class="nav-description">Xem thông tin chi tiết khách hàng, cài đặt đơn hàng và lịch sử đơn hàng</div>
+      </a>
+    </div>
+  </div>
+
+  <div class="footer-info">
+    <p>E-Catalog v1.0 • Quản lý bán hàng trang sức</p>
+    <p style="margin-top: 4px;">© 2024 All rights reserved</p>
+  </div>
+</body>
+</html>

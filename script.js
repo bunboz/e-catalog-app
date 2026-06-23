@@ -52,8 +52,10 @@ const PRODUCTS = [
     image: 'bracelet_v1',
     specs: { group: 'Lắc tay', purity: '75Y', material: 'CZ / Kim cương', metal: 'Vàng 18K', weight: '3.8-4.2g' },
     versions: [
-      { id: 'v1', name: 'Nón Lá & Vespa', image: 'bracelet_v1', desc: 'Charm nón lá, vespa, đèn lồng' },
-      { id: 'v2', name: 'Ghế & Cà Phê', image: 'bracelet_v2', desc: 'Charm ghế nhựa, cà phê phin' },
+      { id: 'v1', name: 'Nón Lá & Vespa', image: 'bracelet_v1', desc: 'Charm nón lá, vespa, đèn lồng',
+        photos: { 'Vàng 18K': 'images/nonla&vespa/bracelet-v2-vang.png', 'Vàng Trắng': 'images/nonla&vespa/bracelet-v2-tim.png' } },
+      { id: 'v2', name: 'Ghế & Cà Phê', image: 'bracelet_v2', desc: 'Charm ghế nhựa, cà phê phin',
+        photos: { 'Vàng 18K': 'images/ghe&caphe/vang.png', 'Vàng Trắng': 'images/ghe&caphe/do.png' } },
     ],
     variants: [
       { sku:'LT-18K-002-14-V',  color:'Vàng 18K',    size:14, weight:'3.8g', stone:'Đá CZ',    stock:56, price:2650000, wholesalePrice:2517500 },
@@ -525,8 +527,13 @@ function updateProductImage() {
   const activeColor = pmRetailColor || colors[0];
   const img = getActiveImage();
 
-  // Main image
-  document.getElementById('pmMainImage').innerHTML = getProductImageHtml(img, activeColor, 160);
+  // Main image — use real photo if available
+  const photo = pmActiveVersion?.photos?.[activeColor];
+  if (photo) {
+    document.getElementById('pmMainImage').innerHTML = `<img src="${photo}" style="max-width:100%;max-height:100%;object-fit:contain;border-radius:8px;">`;
+  } else {
+    document.getElementById('pmMainImage').innerHTML = getProductImageHtml(img, activeColor, 160);
+  }
 
   // Product specs table
   const s = pmCurrentProduct.specs;
@@ -586,8 +593,10 @@ function renderRetailPanel() {
       <div style="display:flex;gap:8px;flex-wrap:wrap;">
         ${versions.map(v => `
           <div onclick="selectVersion('${v.id}')" style="display:flex;align-items:center;gap:10px;padding:8px 14px;border-radius:10px;border:2px solid ${pmActiveVersion?.id===v.id?'#0052CC':'#E5E7EB'};background:${pmActiveVersion?.id===v.id?'#EFF6FF':'white'};cursor:pointer;transition:all .15s;min-width:120px;" onmouseover="this.style.borderColor='#0052CC'" onmouseout="this.style.borderColor='${pmActiveVersion?.id===v.id?'#0052CC':'#E5E7EB'}'">
-            <div style="width:40px;height:40px;flex-shrink:0;">
-              ${SVG_GENERATORS[v.image] ? getProductSvg(v.image, pmRetailColor || colors[0]) : `<span style="font-size:24px;">${v.image}</span>`}
+            <div style="width:44px;height:44px;flex-shrink:0;border-radius:6px;overflow:hidden;background:#F9FAFB;display:flex;align-items:center;justify-content:center;">
+              ${v.photos?.[pmRetailColor || colors[0]]
+                ? `<img src="${v.photos[pmRetailColor || colors[0]]}" style="width:100%;height:100%;object-fit:cover;">`
+                : SVG_GENERATORS[v.image] ? getProductSvg(v.image, pmRetailColor || colors[0]) : `<span style="font-size:24px;">${v.image}</span>`}
             </div>
             <div>
               <div style="font-size:12px;font-weight:700;color:${pmActiveVersion?.id===v.id?'#0052CC':'#374151'};">${v.name}</div>

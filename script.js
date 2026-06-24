@@ -187,7 +187,6 @@ function loadOrderState(order) {
 }
 
 function switchOrder(id) {
-  if (longPressFired) { longPressFired = false; return; }
   saveOrderState();
   activeOrderId = id;
   loadOrderState(getActiveOrder());
@@ -296,36 +295,22 @@ function ctxDelete() {
   removeOrder(id, { stopPropagation: () => {} });
 }
 
-// Long press for iPad
-let longPressTimer = null;
-let longPressFired = false;
-
-function startLongPress(e, orderId) {
-  longPressFired = false;
-  const touch = e.touches[0];
-  longPressTimer = setTimeout(() => {
-    longPressFired = true;
-    e.preventDefault();
-    showOrderContextMenu({
-      preventDefault: () => {},
-      stopPropagation: () => {},
-      clientX: touch.clientX,
-      clientY: touch.clientY,
-    }, orderId);
-    // Vibrate if supported
-    if (navigator.vibrate) navigator.vibrate(30);
-  }, 500);
-}
-
-function cancelLongPress() {
-  if (longPressTimer) { clearTimeout(longPressTimer); longPressTimer = null; }
+function onTabClick(e, orderId) {
+  e.stopPropagation();
+  if (orderId === activeOrderId) {
+    // Already active → show context menu below the tab
+    showOrderContextMenu(e, orderId);
+  } else {
+    // Switch to this order
+    hideOrderContextMenu();
+    switchOrder(orderId);
+  }
 }
 
 // Close context menu on click/touch anywhere
-document.addEventListener('click', hideOrderContextMenu);
-document.addEventListener('touchstart', e => {
+document.addEventListener('click', e => {
   const menu = document.getElementById('orderContextMenu');
-  if (menu.style.display === 'block' && !menu.contains(e.target)) hideOrderContextMenu();
+  if (menu && menu.style.display === 'block' && !menu.contains(e.target)) hideOrderContextMenu();
 });
 
 function getFilteredProducts() {
@@ -346,7 +331,7 @@ function renderSubHeader() {
     const purTag = o.purity?.tag || '';
     const label = o.customName || `Đặt hàng ${orders.indexOf(o) + 1}`;
     return `
-      <button onclick="switchOrder(${o.id})" oncontextmenu="showOrderContextMenu(event, ${o.id})" ontouchstart="startLongPress(event, ${o.id})" ontouchend="cancelLongPress()" ontouchmove="cancelLongPress()" class="sub-tab${isActive ? ' active' : ''}">
+      <button onclick="onTabClick(event, ${o.id})" class="sub-tab${isActive ? ' active' : ''}">
         <span>${label}</span>
         ${itemCount > 0 ? `<span class="sub-tab-badge">${itemCount}</span>` : ''}
         ${matIcon && purTag ? `<span class="sub-tab-meta">${matIcon}${purTag}</span>` : ''}

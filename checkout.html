@@ -439,7 +439,6 @@
 
 <!-- TOPBAR -->
 <header class="topbar">
-  <a href="index.html" style="text-decoration:none;color:white;font-size:18px;font-weight:800;letter-spacing:-0.5px;cursor:pointer;margin-right:4px;">💎 E-Catalog</a>
   <button class="btn-back" onclick="history.back()">← Quay lại</button>
   <div class="topbar-title">Tạo đơn hàng</div>
   <div class="topbar-customer" onclick="toggleCustomerDD(event)">
@@ -497,13 +496,80 @@ const COLOR_DOTS = {
 const ICONS = { 1:'💍', 2:'⭕', 3:'🔗', 4:'💎', 5:'✨', 6:'📎' };
 const fmt = n => new Intl.NumberFormat('vi-VN').format(n) + 'đ';
 
+const GROUP_COLORS = {
+  'vang': { bg: '#FFFBEB', border: '#FCD34D', text: '#92400E', accent: '#F59E0B' },
+  'bac':  { bg: '#F9FAFB', border: '#D1D5DB', text: '#374151', accent: '#6B7280' },
+};
+
+function groupItemsByMaterial(items) {
+  const groups = {};
+  items.forEach(item => {
+    const key = (item.orderMaterial || '') + '|' + (item.orderPurity || '');
+    if (!groups[key]) {
+      groups[key] = {
+        key,
+        material: item.orderMaterial || 'Khác',
+        purity: item.orderPurity || '',
+        icon: item.materialIcon || '🔩',
+        materialId: item.materialId || 'bac',
+        items: [],
+      };
+    }
+    groups[key].items.push(item);
+  });
+  return Object.values(groups);
+}
+
+function renderItemRow(item, b) {
+  const alloc = b.alloc[item.variantSku] || 0;
+  const rem   = remaining(item.variantSku);
+  const icon  = ICONS[item.productId] || '💍';
+  const dot   = COLOR_DOTS[item.color] || '#9CA3AF';
+  const itemId = item.variantSku.replace(/[^a-zA-Z0-9]/g, '_');
+  return `
+    <div class="item-row">
+      <div class="item-thumb">${icon}</div>
+      <div class="item-info">
+        <div class="item-name">${item.name}</div>
+        <div class="item-meta">
+          <span class="item-color-dot" style="background:${dot};border:1px solid rgba(0,0,0,.1);"></span>
+          ${item.color}${item.size ? ` · Size ${item.size}` : ''}
+          · <span style="font-family:monospace;font-size:10px;">${item.variantSku}</span>
+        </div>
+      </div>
+      <span class="item-remaining ${rem > 0 ? 'has-remain' : 'no-remain'}">
+        ${rem > 0 ? `còn ${rem} chưa phân` : '✓ Phân bổ đủ'}
+      </span>
+      <div class="qty-ctrl">
+        <button class="qty-btn" onclick="setAlloc(${b.id},'${item.variantSku}',${alloc-1})">−</button>
+        <input class="qty-input ${alloc>0?'positive':''}" type="number"
+          id="qi_${itemId}" value="${alloc}" min="0"
+          onchange="setAlloc(${b.id},'${item.variantSku}',parseInt(this.value)||0)">
+        <button class="qty-btn" onclick="setAlloc(${b.id},'${item.variantSku}',${alloc+1})">+</button>
+      </div>
+      <div class="item-price">${fmt(alloc * item.price)}</div>
+    </div>`;
+}
+
 // ── INIT ──────────────────────────────────────────────
 function init() {
   const raw = sessionStorage.getItem('cartData');
   if (raw) {
     const d = JSON.parse(raw);
     customer  = d.customer;
-    cartItems = d.cart;
+    if (d.orders && d.orders.length > 0) {
+      // Multi-order or single-order via new format
+      cartItems = [];
+      d.orders.forEach(order => {
+        order.cart.forEach(item => {
+          const existing = cartItems.find(c => c.variantSku === item.variantSku);
+          if (existing) { existing.qty += item.qty; }
+          else { cartItems.push({ ...item, orderId: order.id, orderMaterial: item.materialName || order.material?.name, orderPurity: item.purityTag || order.purity?.tag, materialIcon: item.materialIcon || order.material?.icon, materialId: item.materialId || order.material?.id }); }
+        });
+      });
+    } else if (d.cart) {
+      cartItems = d.cart;
+    }
   } else {
     // Demo data
     customer = { name: 'Anh Hoàng – Sài Gòn', code: 'KH-00024', phone: '0901 234 567' };
@@ -634,40 +700,31 @@ function renderContent() {
 
   const allAllocated = cartItems.every(item => remaining(item.variantSku) === 0);
 
-  // Items in this batch
-  const inBatchHtml = inBatch.length > 0 ? inBatch.map(item => {
-    const alloc = b.alloc[item.variantSku] || 0;
-    const rem   = remaining(item.variantSku);
-    const icon  = ICONS[item.productId] || '💍';
-    const dot   = COLOR_DOTS[item.color] || '#9CA3AF';
-    const itemId = item.variantSku.replace(/[^a-zA-Z0-9]/g, '_');
-    return `
-      <div class="item-row">
-        <div class="item-thumb">${icon}</div>
-        <div class="item-info">
-          <div class="item-name">${item.name}</div>
-          <div class="item-meta">
-            <span class="item-color-dot" style="background:${dot};border:1px solid rgba(0,0,0,.1);"></span>
-            ${item.color}${item.size ? ` · Size ${item.size}` : ''}
-            · <span style="font-family:monospace;font-size:10px;">${item.variantSku}</span>
+  // Items in this batch — grouped by material/purity
+  let inBatchHtml = '';
+  if (inBatch.length > 0) {
+    const groups = groupItemsByMaterial(inBatch);
+    inBatchHtml = groups.map(g => {
+      const gc = GROUP_COLORS[g.materialId] || GROUP_COLORS['bac'];
+      const groupQty = g.items.reduce((s, item) => s + (b.alloc[item.variantSku] || 0), 0);
+      const groupTotal = g.items.reduce((s, item) => s + (b.alloc[item.variantSku] || 0) * item.price, 0);
+      return `
+        <div style="margin-bottom:12px;border:1.5px solid ${gc.border};border-radius:12px;overflow:hidden;">
+          <div style="display:flex;align-items:center;gap:8px;padding:10px 16px;background:${gc.bg};border-bottom:1px solid ${gc.border};">
+            <span style="font-size:16px;">${g.icon}</span>
+            <span style="font-size:13px;font-weight:800;color:${gc.text};">${g.material}</span>
+            <span style="background:${gc.accent};color:white;border-radius:6px;padding:1px 8px;font-size:11px;font-weight:700;">${g.purity}</span>
+            <span style="margin-left:auto;font-size:12px;color:${gc.text};font-weight:600;">${groupQty} sp · ${fmt(groupTotal)}</span>
           </div>
-        </div>
-        <span class="item-remaining ${rem > 0 ? 'has-remain' : 'no-remain'}">
-          ${rem > 0 ? `còn ${rem} chưa phân` : '✓ Phân bổ đủ'}
-        </span>
-        <div class="qty-ctrl">
-          <button class="qty-btn" onclick="setAlloc(${b.id},'${item.variantSku}',${alloc-1})">−</button>
-          <input class="qty-input ${alloc>0?'positive':''}" type="number"
-            id="qi_${itemId}" value="${alloc}" min="0"
-            onchange="setAlloc(${b.id},'${item.variantSku}',parseInt(this.value)||0)">
-          <button class="qty-btn" onclick="setAlloc(${b.id},'${item.variantSku}',${alloc+1})">+</button>
-        </div>
-        <div class="item-price">${fmt(alloc * item.price)}</div>
+          ${g.items.map(item => renderItemRow(item, b)).join('')}
+        </div>`;
+    }).join('');
+  } else {
+    inBatchHtml = `
+      <div style="padding:24px 0;text-align:center;color:#9CA3AF;font-size:13px;">
+        Chưa có sản phẩm — thêm từ danh sách bên dưới
       </div>`;
-  }).join('') : `
-    <div style="padding:24px 0;text-align:center;color:#9CA3AF;font-size:13px;">
-      Chưa có sản phẩm — thêm từ danh sách bên dưới
-    </div>`;
+  }
 
   // (Unallocated items are rendered in the right panel)
 
@@ -724,39 +781,52 @@ function renderContent() {
   const allUnalloc = cartItems.filter(item => remaining(item.variantSku) > 0);
   const totalRemaining = allUnalloc.reduce((s, i) => s + remaining(i.variantSku), 0);
 
+  const rightGroups = groupItemsByMaterial(cartItems);
   document.getElementById('rightPanel').innerHTML = `
     <div style="padding:16px 20px;border-bottom:1px solid #E5E7EB;">
       <div style="font-size:13px;font-weight:700;color:#111827;">Tất cả sản phẩm</div>
       <div style="font-size:11px;color:#9CA3AF;margin-top:2px;">${cartItems.length} sản phẩm · ${totalRemaining > 0 ? totalRemaining + ' chưa phân bổ' : 'Đã phân bổ hết ✓'}</div>
     </div>
-    ${cartItems.map(item => {
-      const rem  = remaining(item.variantSku);
-      const icon = ICONS[item.productId] || '💍';
-      const dot  = COLOR_DOTS[item.color] || '#9CA3AF';
-      const allocated = totalAllocated(item.variantSku);
+    ${rightGroups.map(g => {
+      const gc = GROUP_COLORS[g.materialId] || GROUP_COLORS['bac'];
       return `
-        <div style="display:flex;align-items:center;gap:10px;padding:10px 20px;border-bottom:1px solid #F3F4F6;${rem > 0 ? '' : 'opacity:.55;'}">
-          <span style="font-size:18px;">${icon}</span>
-          <div style="flex:1;min-width:0;">
-            <div style="font-size:12px;font-weight:600;color:#111827;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${item.name}</div>
-            <div style="font-size:11px;color:#9CA3AF;margin-top:1px;">
-              <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${dot};border:1px solid rgba(0,0,0,.1);vertical-align:middle;"></span>
-              ${item.color}${item.size ? ' · S' + item.size : ''}
-            </div>
-            ${rem > 0
-              ? `<div style="font-size:11px;color:#F59E0B;font-weight:600;margin-top:2px;">⚠ ${rem} sp chưa phân bổ</div>`
-              : `<div style="font-size:11px;color:#059669;font-weight:600;margin-top:2px;">✓ Đã phân bổ ${allocated} sp</div>`
-            }
+        <div style="border-bottom:2px solid ${gc.border};">
+          <div style="display:flex;align-items:center;gap:6px;padding:10px 20px;background:${gc.bg};border-bottom:1px solid ${gc.border};">
+            <span style="font-size:14px;">${g.icon}</span>
+            <span style="font-size:12px;font-weight:700;color:${gc.text};">${g.material}</span>
+            <span style="background:${gc.accent};color:white;border-radius:5px;padding:0 6px;font-size:10px;font-weight:700;">${g.purity}</span>
+            <span style="margin-left:auto;font-size:11px;color:${gc.text};">${g.items.length} sp</span>
           </div>
-          <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;">
-            <div style="display:flex;align-items:center;gap:3px;">
-              <button class="qty-btn" style="width:24px;height:24px;font-size:13px;" onclick="changeItemQty('${item.variantSku}',-1)">−</button>
-              <input class="qty-input" style="width:38px;font-size:12px;padding:2px 0;" type="number" value="${item.qty}" min="${allocated}"
-                onchange="setItemQty('${item.variantSku}',parseInt(this.value)||0)">
-              <button class="qty-btn" style="width:24px;height:24px;font-size:13px;" onclick="changeItemQty('${item.variantSku}',1)">+</button>
-            </div>
-            ${rem > 0 ? `<button class="btn-add-item" style="font-size:11px;padding:3px 8px;" onclick="addItemToBatch('${item.variantSku}')">+ Đợt này</button>` : ''}
-          </div>
+          ${g.items.map(item => {
+            const rem  = remaining(item.variantSku);
+            const icon = ICONS[item.productId] || '💍';
+            const dot  = COLOR_DOTS[item.color] || '#9CA3AF';
+            const allocated = totalAllocated(item.variantSku);
+            return `
+              <div style="display:flex;align-items:center;gap:10px;padding:10px 20px;border-bottom:1px solid #F3F4F6;${rem > 0 ? '' : 'opacity:.55;'}">
+                <span style="font-size:18px;">${icon}</span>
+                <div style="flex:1;min-width:0;">
+                  <div style="font-size:12px;font-weight:600;color:#111827;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${item.name}</div>
+                  <div style="font-size:11px;color:#9CA3AF;margin-top:1px;">
+                    <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${dot};border:1px solid rgba(0,0,0,.1);vertical-align:middle;"></span>
+                    ${item.color}${item.size ? ' · S' + item.size : ''}
+                  </div>
+                  ${rem > 0
+                    ? `<div style="font-size:11px;color:#F59E0B;font-weight:600;margin-top:2px;">⚠ ${rem} sp chưa phân bổ</div>`
+                    : `<div style="font-size:11px;color:#059669;font-weight:600;margin-top:2px;">✓ Đã phân bổ ${allocated} sp</div>`
+                  }
+                </div>
+                <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;">
+                  <div style="display:flex;align-items:center;gap:3px;">
+                    <button class="qty-btn" style="width:24px;height:24px;font-size:13px;" onclick="changeItemQty('${item.variantSku}',-1)">−</button>
+                    <input class="qty-input" style="width:38px;font-size:12px;padding:2px 0;" type="number" value="${item.qty}" min="${allocated}"
+                      onchange="setItemQty('${item.variantSku}',parseInt(this.value)||0)">
+                    <button class="qty-btn" style="width:24px;height:24px;font-size:13px;" onclick="changeItemQty('${item.variantSku}',1)">+</button>
+                  </div>
+                  ${rem > 0 ? `<button class="btn-add-item" style="font-size:11px;padding:3px 8px;" onclick="addItemToBatch('${item.variantSku}')">+ Đợt này</button>` : ''}
+                </div>
+              </div>`;
+          }).join('')}
         </div>`;
     }).join('')}
   `;
@@ -789,6 +859,9 @@ function confirmOrder() {
     const bTotal = items.reduce((s, item) => s + (b.alloc[item.variantSku] || 0) * item.price, 0);
     const col = batchColors[i % batchColors.length];
 
+    // Group items by material
+    const matGroups = groupItemsByMaterial(items);
+
     return `
       <div style="background:white;border-radius:12px;border:1px solid #E5E7EB;overflow:hidden;">
         <div style="padding:14px 20px;background:${col}08;border-bottom:1px solid #E5E7EB;display:flex;align-items:center;gap:10px;">
@@ -798,22 +871,32 @@ function confirmOrder() {
           <div style="margin-left:auto;font-size:14px;font-weight:700;color:${col};">${fmt(bTotal)}</div>
         </div>
         <div style="padding:4px 20px;">
-          ${items.map(item => {
-            const alloc = b.alloc[item.variantSku] || 0;
-            const icon = ICONS[item.productId] || '💍';
-            const dot = COLOR_DOTS[item.color] || '#9CA3AF';
+          ${matGroups.map(g => {
+            const gc = GROUP_COLORS[g.materialId] || GROUP_COLORS['bac'];
             return `
-              <div style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid #F3F4F6;">
-                <span style="font-size:18px;">${icon}</span>
-                <div style="flex:1;min-width:0;">
-                  <div style="font-size:13px;font-weight:600;color:#111827;">${item.name}</div>
-                  <div style="font-size:11px;color:#9CA3AF;margin-top:1px;">
-                    <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${dot};border:1px solid rgba(0,0,0,.1);vertical-align:middle;"></span>
-                    ${item.color}${item.size ? ' · Size '+item.size : ''} · ${item.sku}
-                  </div>
+              <div style="margin:8px 0;">
+                <div style="display:flex;align-items:center;gap:6px;padding:6px 10px;background:${gc.bg};border-radius:6px;border:1px solid ${gc.border};margin-bottom:6px;">
+                  <span style="font-size:14px;">${g.icon}</span>
+                  <span style="font-size:11px;font-weight:700;color:${gc.text};">${g.material}${g.purity ? ' · ' + g.purity : ''}</span>
                 </div>
-                <div style="font-size:14px;font-weight:700;color:${col};min-width:40px;text-align:center;">×${alloc}</div>
-                <div style="font-size:13px;font-weight:700;color:#111827;min-width:100px;text-align:right;">${fmt(alloc * item.price)}</div>
+                ${g.items.map(item => {
+                  const alloc = b.alloc[item.variantSku] || 0;
+                  const icon = ICONS[item.productId] || '💍';
+                  const dot = COLOR_DOTS[item.color] || '#9CA3AF';
+                  return `
+                    <div style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid #F3F4F6;">
+                      <span style="font-size:18px;">${icon}</span>
+                      <div style="flex:1;min-width:0;">
+                        <div style="font-size:13px;font-weight:600;color:#111827;">${item.name}</div>
+                        <div style="font-size:11px;color:#9CA3AF;margin-top:1px;">
+                          <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${dot};border:1px solid rgba(0,0,0,.1);vertical-align:middle;"></span>
+                          ${item.color}${item.size ? ' · Size '+item.size : ''} · ${item.sku}
+                        </div>
+                      </div>
+                      <div style="font-size:14px;font-weight:700;color:${col};min-width:40px;text-align:center;">×${alloc}</div>
+                      <div style="font-size:13px;font-weight:700;color:#111827;min-width:100px;text-align:right;">${fmt(alloc * item.price)}</div>
+                    </div>`;
+                }).join('')}
               </div>`;
           }).join('')}
         </div>
@@ -907,41 +990,54 @@ function finalizeOrder(orderNum) {
             <div style="font-size:11px;color:#6B7280;background:#F3F4F6;padding:2px 8px;border-radius:20px;">${bMau} mẫu · ${bQty} sp</div>
             <div style="margin-left:auto;font-size:14px;font-weight:700;color:${col};">${fmt(bTotal)}</div>
           </div>
-          <table style="width:100%;border-collapse:collapse;font-size:13px;">
-            <thead>
-              <tr style="background:#F9FAFB;color:#9CA3AF;font-size:11px;text-transform:uppercase;letter-spacing:.4px;">
-                <th style="padding:8px 20px;text-align:left;font-weight:600;">Sản phẩm</th>
-                <th style="padding:8px 12px;text-align:center;font-weight:600;width:60px;">SL</th>
-                <th style="padding:8px 12px;text-align:right;font-weight:600;width:90px;">Đơn giá</th>
-                <th style="padding:8px 20px;text-align:right;font-weight:600;width:100px;">Thành tiền</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${items.map(item => {
-                const alloc = b.alloc[item.variantSku] || 0;
-                const icon = ICONS[item.productId] || '💍';
-                const dot = COLOR_DOTS[item.color] || '#9CA3AF';
-                return `
-                  <tr style="border-bottom:1px solid #F3F4F6;">
-                    <td style="padding:10px 20px;">
-                      <div style="display:flex;align-items:center;gap:10px;">
-                        <span style="font-size:18px;">${icon}</span>
-                        <div>
-                          <div style="font-weight:600;color:#111827;">${item.name}</div>
-                          <div style="font-size:11px;color:#9CA3AF;margin-top:1px;">
-                            <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${dot};border:1px solid rgba(0,0,0,.1);vertical-align:middle;"></span>
-                            ${item.color}${item.size ? ' · Size '+item.size : ''} · <span style="font-family:monospace;font-size:10px;">${item.variantSku}</span>
-                          </div>
-                        </div>
-                      </div>
-                    </td>
-                    <td style="padding:10px 12px;text-align:center;font-weight:700;color:${col};">${alloc}</td>
-                    <td style="padding:10px 12px;text-align:right;color:#6B7280;">${fmt(item.price)}</td>
-                    <td style="padding:10px 20px;text-align:right;font-weight:700;color:#111827;">${fmt(alloc * item.price)}</td>
-                  </tr>`;
-              }).join('')}
-            </tbody>
-          </table>
+          ${(() => {
+            const matGroups = groupItemsByMaterial(items);
+            return matGroups.map(g => {
+              const gc = GROUP_COLORS[g.materialId] || GROUP_COLORS['bac'];
+              return `
+                <div style="margin:8px 20px;">
+                  <div style="display:flex;align-items:center;gap:6px;padding:6px 10px;background:${gc.bg};border-radius:6px;border:1px solid ${gc.border};margin-bottom:4px;">
+                    <span style="font-size:14px;">${g.icon}</span>
+                    <span style="font-size:11px;font-weight:700;color:${gc.text};">${g.material}${g.purity ? ' · ' + g.purity : ''}</span>
+                  </div>
+                </div>
+                <table style="width:100%;border-collapse:collapse;font-size:13px;">
+                  <thead>
+                    <tr style="background:#F9FAFB;color:#9CA3AF;font-size:11px;text-transform:uppercase;letter-spacing:.4px;">
+                      <th style="padding:8px 20px;text-align:left;font-weight:600;">Sản phẩm</th>
+                      <th style="padding:8px 12px;text-align:center;font-weight:600;width:60px;">SL</th>
+                      <th style="padding:8px 12px;text-align:right;font-weight:600;width:90px;">Đơn giá</th>
+                      <th style="padding:8px 20px;text-align:right;font-weight:600;width:100px;">Thành tiền</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    ${g.items.map(item => {
+                      const alloc = b.alloc[item.variantSku] || 0;
+                      const icon = ICONS[item.productId] || '💍';
+                      const dot = COLOR_DOTS[item.color] || '#9CA3AF';
+                      return `
+                        <tr style="border-bottom:1px solid #F3F4F6;">
+                          <td style="padding:10px 20px;">
+                            <div style="display:flex;align-items:center;gap:10px;">
+                              <span style="font-size:18px;">${icon}</span>
+                              <div>
+                                <div style="font-weight:600;color:#111827;">${item.name}</div>
+                                <div style="font-size:11px;color:#9CA3AF;margin-top:1px;">
+                                  <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${dot};border:1px solid rgba(0,0,0,.1);vertical-align:middle;"></span>
+                                  ${item.color}${item.size ? ' · Size '+item.size : ''} · <span style="font-family:monospace;font-size:10px;">${item.variantSku}</span>
+                                </div>
+                              </div>
+                            </div>
+                          </td>
+                          <td style="padding:10px 12px;text-align:center;font-weight:700;color:${col};">${alloc}</td>
+                          <td style="padding:10px 12px;text-align:right;color:#6B7280;">${fmt(item.price)}</td>
+                          <td style="padding:10px 20px;text-align:right;font-weight:700;color:#111827;">${fmt(alloc * item.price)}</td>
+                        </tr>`;
+                    }).join('')}
+                  </tbody>
+                </table>`;
+            }).join('');
+          })()}
           ${b.note ? `<div style="padding:10px 20px;font-size:12px;color:#9CA3AF;font-style:italic;border-top:1px solid #F3F4F6;">📝 ${b.note}</div>` : ''}
         </div>
       </div>`;
@@ -951,7 +1047,6 @@ function finalizeOrder(orderNum) {
     <div style="height:100vh;display:flex;flex-direction:column;background:#F3F4F6;">
       <!-- Header -->
       <header style="background:#0052CC;color:white;display:flex;align-items:center;gap:14px;padding:0 20px;height:54px;flex-shrink:0;">
-        <a href="index.html" style="text-decoration:none;color:white;font-size:18px;font-weight:800;letter-spacing:-0.5px;cursor:pointer;margin-right:4px;">💎 E-Catalog</a>
         <button onclick="window.location.href='customer.html'" style="background:rgba(255,255,255,.15);border:none;color:white;padding:6px 12px;border-radius:6px;font-size:13px;font-weight:500;cursor:pointer;">← Khách hàng</button>
         <div style="font-size:15px;font-weight:700;">Chi tiết đơn hàng</div>
         <div style="margin-left:auto;display:flex;align-items:center;gap:10px;">

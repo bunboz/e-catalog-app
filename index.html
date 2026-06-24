@@ -6,6 +6,83 @@
   <title>E-Catalog Wholesale</title>
   <link rel="stylesheet" href="styles.css">
   <style>
+    /* ─── SUB HEADER ──────────────────────────────── */
+    .sub-header {
+      background: #F8FAFC;
+      border-bottom: 1px solid #E5E7EB;
+      padding: 8px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .sub-header-left { display: flex; align-items: center; gap: 8px; }
+    .sub-tabs { display: flex; gap: 4px; }
+    .sub-tab {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 7px 14px;
+      border: 1.5px solid #E5E7EB;
+      border-radius: 10px;
+      background: white;
+      font-size: 13px; font-weight: 600; color: #374151;
+      cursor: pointer;
+      transition: all .15s;
+      white-space: nowrap;
+    }
+    .sub-tab:hover { border-color: #93C5FD; background: #EFF6FF; }
+    .sub-tab.active {
+      border-color: #0052CC; background: #EFF6FF; color: #0052CC;
+      box-shadow: 0 1px 4px rgba(0,82,204,.12);
+    }
+    .sub-tab-badge {
+      background: #0052CC; color: white;
+      border-radius: 50%; min-width: 18px; height: 18px;
+      display: inline-flex; align-items: center; justify-content: center;
+      font-size: 10px; font-weight: 700;
+    }
+    .sub-tab-meta {
+      font-size: 10px; color: #6B7280; font-weight: 500;
+    }
+    .sub-tab-close {
+      font-size: 14px; color: #9CA3AF; cursor: pointer;
+      margin-left: 2px; line-height: 1;
+      border-radius: 50%; width: 16px; height: 16px;
+      display: inline-flex; align-items: center; justify-content: center;
+    }
+    .sub-tab-close:hover { background: #FEE2E2; color: #EF4444; }
+    .sub-tab-dup {
+      font-size: 12px; color: #9CA3AF; cursor: pointer;
+      margin-left: 2px; line-height: 1;
+      border-radius: 50%; width: 16px; height: 16px;
+      display: inline-flex; align-items: center; justify-content: center;
+    }
+    .sub-tab-dup:hover { background: #DBEAFE; color: #0052CC; }
+    .sub-add-btn {
+      padding: 7px 12px;
+      border: 1.5px dashed #D1D5DB;
+      border-radius: 10px;
+      background: transparent;
+      font-size: 12px; font-weight: 600; color: #6B7280;
+      cursor: pointer;
+      transition: all .15s;
+    }
+    .sub-add-btn:hover { border-color: #0052CC; color: #0052CC; background: #EFF6FF; }
+    .sub-chips { display: flex; gap: 6px; }
+    .sub-chip {
+      display: inline-flex; align-items: center; gap: 4px;
+      padding: 6px 12px;
+      border: 1.5px solid #E5E7EB;
+      border-radius: 20px;
+      background: white;
+      font-size: 12px; font-weight: 600; color: #374151;
+      cursor: pointer;
+      transition: all .15s;
+    }
+    .sub-chip:hover { border-color: #FCD34D; background: #FFFBEB; }
+
     /* ─── CART SIDEBAR ─────────────────────────────── */
     .cart-sidebar-backdrop {
       display: none;
@@ -427,8 +504,14 @@
     <span style="font-weight:800;font-size:16px;">E-Catalog</span>
     <span style="font-size:10px;opacity:0.7;letter-spacing:0.5px;">WHOLESALE</span>
   </div>
-  <div class="header-search">
-    <input type="text" id="searchInput" placeholder="Tìm mã mẫu, tên sản phẩm hoặc SKU...">
+  <div class="header-search" style="display:flex;align-items:center;gap:6px;">
+    <input type="text" id="searchInput" placeholder="Tìm mã mẫu, tên sản phẩm hoặc SKU..." style="flex:1;">
+    <button onclick="openBarcodeModal()" style="background:white;border:none;border-radius:6px;width:42px;height:42px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:background .15s;" title="Quét mã barcode">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#374151" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M3 7V5a2 2 0 012-2h2"/><path d="M17 3h2a2 2 0 012 2v2"/><path d="M21 17v2a2 2 0 01-2 2h-2"/><path d="M7 21H5a2 2 0 01-2-2v-2"/>
+        <line x1="7" y1="8" x2="7" y2="16"/><line x1="11" y1="8" x2="11" y2="16"/><line x1="15" y1="8" x2="15" y2="12"/><line x1="19" y1="8" x2="19" y2="16"/>
+      </svg>
+    </button>
   </div>
   <div class="header-divider"></div>
   <div class="header-actions">
@@ -462,6 +545,8 @@
   </div>
 </header>
 
+<!-- SUB HEADER: Order tabs + Material/Purity chips -->
+<div id="subHeader" class="sub-header" style="display:none;"></div>
 
 <!-- MAIN CONTAINER -->
 <div class="container">
@@ -567,7 +652,8 @@
 
   <!-- Actions -->
   <div class="cs-actions">
-    <button class="cs-btn-order" onclick="goToCheckout()">📦 Tạo đơn đặt hàng</button>
+    <button class="cs-btn-order" onclick="goToCheckout('single')">📦 Tạo đơn đặt hàng</button>
+    <button id="csCheckoutAllBtn" class="cs-btn-order" onclick="goToCheckout('all')" style="display:none;background:linear-gradient(135deg,#0052CC,#003DA3);margin-top:6px;font-size:13px;">📦 Tạo tất cả đơn hàng</button>
     <div class="cs-secondary-actions">
       <button class="cs-btn-zalo">✈ Gửi Zalo / PDF</button>
       <button class="cs-btn-delete">🗑 Xóa báo giá</button>
@@ -586,6 +672,45 @@
       <input type="text" id="customerSearch" class="form-control" placeholder="Tìm tên, số điện thoại khách hàng..." style="margin-bottom:12px;">
       <div id="customerList" style="max-height:420px;overflow-y:auto;"></div>
     </div>
+  </div>
+</div>
+
+<!-- MATERIAL & PURITY MODAL -->
+<div class="modal" id="materialModal">
+  <div class="modal-content" style="max-width:480px;">
+
+    <!-- Step 1: Nguyên liệu -->
+    <div id="stepMaterial">
+      <div class="modal-header">
+        <div style="flex:1;">
+          <div style="font-size:11px;font-weight:600;color:#6B7280;letter-spacing:.5px;text-transform:uppercase;margin-bottom:4px;" id="materialStepLabel">Bước 2 / 3</div>
+          <h2 class="modal-title">Chọn nguyên liệu</h2>
+        </div>
+        <button id="materialCloseBtn" class="btn-close-modal" onclick="closeMaterialModal()" style="display:none;">×</button>
+      </div>
+      <div class="modal-body">
+        <p style="font-size:13px;color:#6B7280;margin-bottom:16px;">Chọn loại kim loại chính cho đơn hàng này</p>
+        <div id="materialOptions"></div>
+      </div>
+    </div>
+
+    <!-- Step 2: Tuổi vàng / Tuổi bạc -->
+    <div id="stepPurity" style="display:none;">
+      <div class="modal-header">
+        <div style="flex:1;">
+          <div style="font-size:11px;font-weight:600;color:#6B7280;letter-spacing:.5px;text-transform:uppercase;margin-bottom:4px;">Bước 3 / 3</div>
+          <h2 class="modal-title" id="purityTitle">Chọn tuổi vàng</h2>
+        </div>
+      </div>
+      <div class="modal-body">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px;">
+          <button onclick="backToMaterial()" style="display:inline-flex;align-items:center;gap:5px;background:#F3F4F6;border:none;border-radius:8px;padding:6px 12px;font-size:12px;font-weight:600;color:#374151;cursor:pointer;">‹ Quay lại</button>
+          <span style="font-size:12px;color:#6B7280;">Nguyên liệu: <strong id="pmMaterialName" style="color:#111827;"></strong></span>
+        </div>
+        <div id="purityOptions"></div>
+      </div>
+    </div>
+
   </div>
 </div>
 
@@ -633,6 +758,62 @@
       <button class="pm-btn-close" onclick="closeProductModal()">Đóng</button>
       <button class="pm-btn-order-create" id="pmBtnCreateOrder" onclick="addToCart(true)">🛒 Thêm vào giỏ</button>
     </div>
+  </div>
+</div>
+
+<!-- BARCODE SCANNER MODAL -->
+<div class="modal" id="barcodeModal">
+  <div class="modal-content" style="max-width:480px;overflow:hidden;">
+    <div class="modal-header">
+      <h2 class="modal-title">📷 Quét mã Barcode</h2>
+      <button class="btn-close-modal" onclick="closeBarcodeModal()">×</button>
+    </div>
+    <div class="modal-body" style="padding:16px;">
+      <!-- Camera view -->
+      <div id="barcodeCameraWrap" style="position:relative;width:100%;aspect-ratio:4/3;background:#111;border-radius:10px;overflow:hidden;margin-bottom:12px;">
+        <video id="barcodeVideo" autoplay playsinline muted style="width:100%;height:100%;object-fit:cover;"></video>
+        <!-- Scan overlay -->
+        <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none;">
+          <div style="width:70%;height:40%;border:2px solid rgba(0,82,204,.6);border-radius:12px;box-shadow:0 0 0 9999px rgba(0,0,0,.3);">
+            <div style="position:absolute;top:50%;left:15%;right:15%;height:2px;background:#0052CC;animation:scanLine 2s ease-in-out infinite;"></div>
+          </div>
+        </div>
+        <!-- Status -->
+        <div id="barcodeCameraStatus" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:white;font-size:13px;font-weight:600;background:rgba(0,0,0,.6);">
+          Đang khởi động camera...
+        </div>
+      </div>
+      <!-- Manual input -->
+      <div style="display:flex;gap:8px;">
+        <input type="text" id="barcodeManualInput" class="form-control" placeholder="Hoặc nhập mã barcode thủ công..." style="flex:1;" onkeydown="if(event.key==='Enter')submitBarcode()">
+        <button onclick="submitBarcode()" style="background:#0052CC;color:white;border:none;border-radius:6px;padding:10px 16px;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap;">Tìm</button>
+      </div>
+      <!-- Result -->
+      <div id="barcodeResult" style="margin-top:12px;"></div>
+    </div>
+  </div>
+</div>
+
+<style>
+@keyframes scanLine {
+  0%, 100% { transform: translateY(-40px); opacity: .5; }
+  50% { transform: translateY(40px); opacity: 1; }
+}
+</style>
+
+<!-- ORDER TAB CONTEXT MENU -->
+<div id="orderContextMenu" style="display:none;position:fixed;z-index:9999;background:white;border-radius:10px;box-shadow:0 8px 30px rgba(0,0,0,.18);min-width:180px;overflow:hidden;animation:ddFadeIn .12s ease-out;">
+  <div style="padding:4px;">
+    <button onclick="ctxDuplicate()" style="display:flex;align-items:center;gap:10px;width:100%;padding:10px 14px;border:none;background:none;border-radius:6px;font-size:13px;color:#374151;cursor:pointer;font-family:inherit;transition:background .1s;text-align:left;" onmouseover="this.style.background='#F3F4F6'" onmouseout="this.style.background=''">
+      <span style="font-size:15px;width:20px;text-align:center;">⧉</span> Nhân bản
+    </button>
+    <button onclick="ctxRename()" style="display:flex;align-items:center;gap:10px;width:100%;padding:10px 14px;border:none;background:none;border-radius:6px;font-size:13px;color:#374151;cursor:pointer;font-family:inherit;transition:background .1s;text-align:left;" onmouseover="this.style.background='#F3F4F6'" onmouseout="this.style.background=''">
+      <span style="font-size:15px;width:20px;text-align:center;">✏️</span> Đổi tên
+    </button>
+    <div style="height:1px;background:#E5E7EB;margin:4px 0;"></div>
+    <button id="ctxDeleteOrder" onclick="ctxDelete()" style="display:flex;align-items:center;gap:10px;width:100%;padding:10px 14px;border:none;background:none;border-radius:6px;font-size:13px;color:#EF4444;cursor:pointer;font-family:inherit;transition:background .1s;text-align:left;" onmouseover="this.style.background='#FEF2F2'" onmouseout="this.style.background=''">
+      <span style="font-size:15px;width:20px;text-align:center;">🗑</span> Xoá
+    </button>
   </div>
 </div>
 

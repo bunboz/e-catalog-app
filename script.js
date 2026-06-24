@@ -20,16 +20,41 @@ const COLOR_META = {
 };
 
 const CUSTOMER_REQUIREMENTS = [
-  'Khắc tên', 'Đóng gói quà tặng', 'Đóng hộp riêng', 'Giao gấp',
-  'Kiểm tra kỹ trước giao', 'Đổi size nếu không vừa', 'Bọc túi nhung', 'Kèm giấy bảo hành',
+  { id: 'dap-lacquer',    name: 'Đắp lacquer → Móc máy' },
+  { id: 'danh-bong',      name: 'Đánh bóng → Móc máy' },
+  { id: 'khoa',           name: 'Khóa', details: ['Khóa hộp', 'Khóa kín', 'Khóa button', 'Khóa tôm', 'Khóa chốt', 'Khóa xoắn'] },
+  { id: 'kich-thuoc-day', name: 'Kích thước Dây', details: ['1.0mm', '1.2mm', '1.5mm', '1.8mm', '2.0mm', '2.5mm', '3.0mm'] },
+  { id: 'kieu-bao-ball',  name: 'Kiểu bào Ball', details: ['Ball trơn', 'Ball xoắn', 'Ball kim cương', 'Ball cắt'] },
+  { id: 'khong-khoen',    name: 'Không lấy khoen rơi + tag' },
+  { id: 'loai-day',       name: 'Loại dây', details: ['Dây xích', 'Dây mì', 'Dây lụa', 'Dây rắn', 'Dây bi', 'Dây xoắn', 'Dây cable'] },
+  { id: 'mau-day',        name: 'Màu dây', details: ['Vàng', 'Vàng hồng', 'Trắng', 'Đen', 'Bạc'] },
+  { id: 'thay-mau-da',    name: 'Thay màu đá tấm', details: ['Trắng CZ', 'Hồng CZ', 'Xanh dương', 'Xanh lá', 'Đỏ Ruby', 'Vàng Citrine', 'Tím Amethyst', 'Đen Onyx'] },
 ];
+
+const MATERIALS = [
+  { id: 'bac',  name: 'Bạc',   icon: '🥈', desc: 'Bạc nguyên chất và hợp kim bạc',          color: '#C0C0C0', bg: '#F5F5F5', border: '#A0A0A0' },
+  { id: 'vang', name: 'Vàng',  icon: '🥇', desc: 'Vàng nguyên chất và hợp kim vàng',        color: '#FFB800', bg: '#FFF8E1', border: '#D49000' },
+];
+
+const PURITIES = {
+  'bac': [
+    { id: '925', name: 'Bạc 925', desc: 'Sterling Silver · 92.5% bạc', tag: '925' },
+    { id: '999', name: 'Bạc 999', desc: 'Fine Silver · 99.9% bạc nguyên chất', tag: '999' },
+  ],
+  'vang': [
+    { id: '10k', name: 'Vàng 10K', desc: '41.7% vàng · Phù hợp ngân sách', tag: '10K' },
+    { id: '14k', name: 'Vàng 14K', desc: '58.3% vàng · Độ bền cao', tag: '14K' },
+    { id: '18k', name: 'Vàng 18K', desc: '75% vàng · Phổ biến nhất', tag: '18K' },
+    { id: '24k', name: 'Vàng 24K', desc: '99.9% vàng nguyên chất', tag: '24K' },
+  ],
+};
 
 const PRODUCTS = [
   {
     id: 1, name: 'Nhẫn Bạc Nữ Đính Đá CZ Hoa Cổ', sku: 'RG-CZ-001',
     badge: 'Bán chạy', category: 'nhan', priceRange: '450.000đ – 490.000đ',
     image: 'ring_v1',
-    specs: { group: 'Nhẫn', purity: '925', material: 'Diamond', metal: 'Bạc 925', weight: '2.1-2.4g' },
+    specs: { group: 'Nhẫn', purity: '925', material: 'Diamond', metal: 'Bạc 925', weight: '2.1-2.4g', materialId: 'bac', purityId: '925' },
     versions: [
       { id: 'v1', name: 'Hoa Cổ Điển', image: 'ring_v1', desc: 'Kiểu đá đơn cổ điển' },
       { id: 'v2', name: 'Hoa Hiện Đại', image: 'ring_v2', desc: 'Kiểu hoa cách điệu' },
@@ -50,7 +75,7 @@ const PRODUCTS = [
     id: 2, name: 'Lắc Tay Vàng 18K Charm Đính Đá', sku: 'LT-18K-002',
     badge: 'Bán chạy', category: 'vong-tay', priceRange: '2.650.000đ – 3.000.000đ',
     image: 'bracelet_v1',
-    specs: { group: 'Lắc tay', purity: '75Y', material: 'CZ / Kim cương', metal: 'Vàng 18K', weight: '3.8-4.2g' },
+    specs: { group: 'Lắc tay', purity: '75Y', material: 'CZ / Kim cương', metal: 'Vàng 18K', weight: '3.8-4.2g', materialId: 'vang', purityId: '18k' },
     versions: [
       { id: 'v1', name: 'Nón Lá & Vespa', image: 'bracelet_v1', desc: 'Charm nón lá, vespa, đèn lồng',
         photos: { 'Vàng 18K': 'images/nonla&vespa/bracelet-v2-vang.png', 'Vàng Trắng': 'images/nonla&vespa/bracelet-v2-tim.png' } },
@@ -69,7 +94,7 @@ const PRODUCTS = [
     id: 3, name: 'Dây Chuyền Vàng 18K Mặt Bướm', sku: 'DC-18K-003',
     badge: 'Mới', category: 'day-chuyen', priceRange: '3.200.000đ – 3.600.000đ',
     image: 'chain_v1',
-    specs: { group: 'Dây chuyền', purity: '75Y', material: 'Ruby', metal: 'Vàng 18K', weight: '5.1-5.6g' },
+    specs: { group: 'Dây chuyền', purity: '75Y', material: 'Ruby', metal: 'Vàng 18K', weight: '5.1-5.6g', materialId: 'vang', purityId: '18k' },
     versions: [
       { id: 'v1', name: 'Mặt Bướm', image: 'chain_v1', desc: 'Mặt dây hình bướm' },
       { id: 'v2', name: 'Mặt Hoa', image: 'chain_v2', desc: 'Mặt dây hình hoa' },
@@ -85,7 +110,7 @@ const PRODUCTS = [
     id: 4, name: 'Bông Tai Bạc Đính Đá Ngọc Trai', sku: 'BT-AG-004',
     badge: 'Có sẵn', category: 'bong-tai', priceRange: '320.000đ – 380.000đ',
     image: 'earring_v1',
-    specs: { group: 'Bông tai', purity: '925', material: 'Ngọc Trai', metal: 'Bạc 925', weight: '1.5g' },
+    specs: { group: 'Bông tai', purity: '925', material: 'Ngọc Trai', metal: 'Bạc 925', weight: '1.5g', materialId: 'bac', purityId: '925' },
     versions: [
       { id: 'v1', name: 'Giọt Nước', image: 'earring_v1', desc: 'Kiểu giọt nước' },
       { id: 'v2', name: 'Tròn', image: 'earring_v2', desc: 'Kiểu tròn cổ điển' },
@@ -100,7 +125,7 @@ const PRODUCTS = [
     id: 5, name: 'Nhẫn Đôi Bạc Khắc Tên', sku: 'RG-CP-005',
     badge: 'Nhận đôi', category: 'cap-nhan', priceRange: '550.000đ / cặp',
     image: 'pair_v1',
-    specs: { group: 'Cặp nhẫn', purity: '925', material: 'Không', metal: 'Bạc 925', weight: '3.2-3.6g' },
+    specs: { group: 'Cặp nhẫn', purity: '925', material: 'Không', metal: 'Bạc 925', weight: '3.2-3.6g', materialId: 'bac', purityId: '925' },
     versions: [
       { id: 'v1', name: 'Trơn Khắc Tên', image: 'pair_v1', desc: 'Nhẫn trơn khắc tên' },
       { id: 'v2', name: 'Đính Đá', image: 'pair_v2', desc: 'Nhẫn đính đá CZ' },
@@ -116,7 +141,7 @@ const PRODUCTS = [
     id: 6, name: 'Mặt Dây Chuyền Bạc Hoa Sen', sku: 'MD-AG-006',
     badge: 'MOQ thấp', category: 'mat-day', priceRange: '180.000đ – 220.000đ',
     image: 'pendant_v1',
-    specs: { group: 'Mặt dây', purity: '925', material: 'Không', metal: 'Bạc 925', weight: '1.2g' },
+    specs: { group: 'Mặt dây', purity: '925', material: 'Không', metal: 'Bạc 925', weight: '1.2g', materialId: 'bac', purityId: '925' },
     versions: [
       { id: 'v1', name: 'Hoa Sen', image: 'pendant_v1', desc: 'Mặt hoa sen' },
       { id: 'v2', name: 'Lá Bồ Đề', image: 'pendant_v2', desc: 'Mặt lá bồ đề' },
@@ -134,7 +159,215 @@ const PRODUCTS = [
 // STATE
 // ═══════════════════════════════════════════════════
 let selectedCustomer = null;
-let cart = []; // flat array: [{ productId, name, sku, variantSku, color, size, qty, price }]
+let selectedMaterial = null;
+let selectedPurity   = null;
+let cart = [];
+
+// Multi-order state
+let orders = [
+  { id: 1, cart: [], material: null, purity: null },
+];
+let activeOrderId = 1;
+let orderSeq = 1;
+
+function getActiveOrder() { return orders.find(o => o.id === activeOrderId); }
+
+function saveOrderState() {
+  const o = getActiveOrder();
+  if (!o) return;
+  o.cart = cart;
+  o.material = selectedMaterial;
+  o.purity = selectedPurity;
+}
+
+function loadOrderState(order) {
+  cart = order.cart;
+  selectedMaterial = order.material;
+  selectedPurity = order.purity;
+}
+
+function switchOrder(id) {
+  if (longPressFired) { longPressFired = false; return; }
+  saveOrderState();
+  activeOrderId = id;
+  loadOrderState(getActiveOrder());
+  renderSubHeader();
+  updateStickyBtn();
+  renderProducts(getFilteredProducts());
+}
+
+function addNewOrder() {
+  saveOrderState();
+  orderSeq++;
+  const newOrder = { id: orderSeq, cart: [], material: null, purity: null, customName: null };
+  orders.push(newOrder);
+  activeOrderId = orderSeq;
+  loadOrderState(newOrder);
+  renderSubHeader();
+  openMaterialModal();
+}
+
+function duplicateOrder(id, e) {
+  e.stopPropagation();
+  saveOrderState();
+  const source = orders.find(o => o.id === id);
+  if (!source) return;
+  orderSeq++;
+  const srcName = source.customName || `Đặt hàng ${orders.indexOf(source) + 1}`;
+  const newOrder = {
+    id: orderSeq,
+    cart: source.cart.map(item => ({ ...item })),
+    material: source.material,
+    purity: source.purity,
+    customName: srcName + ' (bản sao)',
+  };
+  orders.push(newOrder);
+  activeOrderId = orderSeq;
+  loadOrderState(newOrder);
+  renderSubHeader();
+  updateStickyBtn();
+  renderProducts(getFilteredProducts());
+  showNotification(`✓ Đã nhân đôi Đặt hàng ${source.id} → Đặt hàng ${orderSeq}`);
+}
+
+function removeOrder(id, e) {
+  e.stopPropagation();
+  if (orders.length <= 1) return;
+  orders = orders.filter(o => o.id !== id);
+  if (activeOrderId === id) {
+    activeOrderId = orders[0].id;
+    loadOrderState(getActiveOrder());
+  }
+  renderSubHeader();
+  updateStickyBtn();
+  renderProducts(getFilteredProducts());
+}
+
+// ── ORDER TAB CONTEXT MENU ──
+let ctxMenuOrderId = null;
+
+function showOrderContextMenu(e, orderId) {
+  e.preventDefault();
+  e.stopPropagation();
+  ctxMenuOrderId = orderId;
+  const menu = document.getElementById('orderContextMenu');
+  const order = orders.find(o => o.id === orderId);
+
+  // Position
+  menu.style.left = e.clientX + 'px';
+  menu.style.top = e.clientY + 'px';
+  menu.style.display = 'block';
+
+  // Disable delete if only 1 order
+  const delBtn = document.getElementById('ctxDeleteOrder');
+  delBtn.style.opacity = orders.length <= 1 ? '.4' : '1';
+  delBtn.style.pointerEvents = orders.length <= 1 ? 'none' : '';
+}
+
+function hideOrderContextMenu() {
+  document.getElementById('orderContextMenu').style.display = 'none';
+  ctxMenuOrderId = null;
+}
+
+function ctxDuplicate() {
+  const id = ctxMenuOrderId;
+  hideOrderContextMenu();
+  if (id === null) return;
+  duplicateOrder(id, { stopPropagation: () => {} });
+}
+
+function ctxRename() {
+  const id = ctxMenuOrderId;
+  hideOrderContextMenu();
+  const order = orders.find(o => o.id === id);
+  if (!order) return;
+  const currentName = order.customName || `Đặt hàng ${orders.indexOf(order) + 1}`;
+  const newName = prompt('Đổi tên đặt hàng:', currentName);
+  if (newName?.trim()) {
+    order.customName = newName.trim();
+    renderSubHeader();
+  }
+}
+
+function ctxDelete() {
+  const id = ctxMenuOrderId;
+  hideOrderContextMenu();
+  if (orders.length <= 1) return;
+  removeOrder(id, { stopPropagation: () => {} });
+}
+
+// Long press for iPad
+let longPressTimer = null;
+let longPressFired = false;
+
+function startLongPress(e, orderId) {
+  longPressFired = false;
+  const touch = e.touches[0];
+  longPressTimer = setTimeout(() => {
+    longPressFired = true;
+    e.preventDefault();
+    showOrderContextMenu({
+      preventDefault: () => {},
+      stopPropagation: () => {},
+      clientX: touch.clientX,
+      clientY: touch.clientY,
+    }, orderId);
+    // Vibrate if supported
+    if (navigator.vibrate) navigator.vibrate(30);
+  }, 500);
+}
+
+function cancelLongPress() {
+  if (longPressTimer) { clearTimeout(longPressTimer); longPressTimer = null; }
+}
+
+// Close context menu on click/touch anywhere
+document.addEventListener('click', hideOrderContextMenu);
+document.addEventListener('touchstart', e => {
+  const menu = document.getElementById('orderContextMenu');
+  if (menu.style.display === 'block' && !menu.contains(e.target)) hideOrderContextMenu();
+});
+
+function getFilteredProducts() {
+  if (!selectedMaterial) return PRODUCTS;
+  // Filter by material only — show all products of selected material type
+  return PRODUCTS.filter(p => p.specs.materialId === selectedMaterial.id);
+}
+
+function renderSubHeader() {
+  const el = document.getElementById('subHeader');
+  if (!el || !selectedCustomer) { if (el) el.style.display = 'none'; return; }
+  el.style.display = '';
+
+  const tabsHtml = orders.map(o => {
+    const isActive = o.id === activeOrderId;
+    const itemCount = o.cart.length;
+    const matIcon = o.material?.icon || '';
+    const purTag = o.purity?.tag || '';
+    const label = o.customName || `Đặt hàng ${orders.indexOf(o) + 1}`;
+    return `
+      <button onclick="switchOrder(${o.id})" oncontextmenu="showOrderContextMenu(event, ${o.id})" ontouchstart="startLongPress(event, ${o.id})" ontouchend="cancelLongPress()" ontouchmove="cancelLongPress()" class="sub-tab${isActive ? ' active' : ''}">
+        <span>${label}</span>
+        ${itemCount > 0 ? `<span class="sub-tab-badge">${itemCount}</span>` : ''}
+        ${matIcon && purTag ? `<span class="sub-tab-meta">${matIcon}${purTag}</span>` : ''}
+      </button>`;
+  }).join('');
+
+  const matPurHtml = selectedMaterial ? `
+    <div class="sub-chips">
+      <button class="sub-chip" onclick="openMaterialModal()" title="Đổi nguyên liệu & tuổi">
+        ${selectedMaterial.icon} ${selectedMaterial.name}${selectedPurity ? ' · ' + selectedPurity.tag : ''}
+        <span style="margin-left:4px;opacity:.5;font-size:10px;">✎</span>
+      </button>
+    </div>` : '';
+
+  el.innerHTML = `
+    <div class="sub-header-left">
+      <div class="sub-tabs">${tabsHtml}</div>
+      <button class="sub-add-btn" onclick="addNewOrder()" title="Thêm đặt hàng mới">+ Thêm</button>
+    </div>
+    ${matPurHtml}`;
+}
 
 // Product modal state
 let pmCurrentProduct = null;
@@ -144,7 +377,8 @@ let pmRetailSize     = null;
 let pmRetailQty      = 1;
 let pmWholesaleQtys  = {}; // synced from quick rows for footer calc
 let pmCustomerNote   = '';
-let pmCustomerReqs   = [];
+let pmCustomerReqs   = [];   // ['khoa', 'loai-day', ...]
+let pmReqDetails     = {};   // { 'khoa': 'Khóa hộp', 'loai-day': 'Dây xích', ... }
 let pmQuickRows      = []; // [{id, color, size, qty}]
 let pmQuickSeq       = 0;
 let pmActiveVersion  = null; // selected version object
@@ -370,7 +604,14 @@ document.head.insertAdjacentHTML('beforeend', `<style>
 function addCartItem(productId, name, sku, variantSku, color, size, qty, price) {
   const existing = cart.find(i => i.variantSku === variantSku);
   if (existing) { existing.qty += qty; }
-  else { cart.push({ productId, name, sku, variantSku, color, size, qty, price }); }
+  else {
+    const prod = PRODUCTS.find(p => p.id === productId);
+    const matId = prod?.specs?.materialId || selectedMaterial?.id || 'bac';
+    const purId = prod?.specs?.purityId || selectedPurity?.id || '';
+    const mat = MATERIALS.find(m => m.id === matId);
+    const pur = PURITIES[matId]?.find(p => p.id === purId);
+    cart.push({ productId, name, sku, variantSku, color, size, qty, price, materialId: matId, purityId: purId, materialName: mat?.name || '', materialIcon: mat?.icon || '🔩', purityTag: pur?.tag || '' });
+  }
 }
 
 // ═══════════════════════════════════════════════════
@@ -388,8 +629,14 @@ function renderProducts(list) {
       </div>`;
     return;
   }
+  const mat = selectedMaterial;
+  const pur = selectedPurity;
+  const metalTagColor = mat?.id === 'vang' ? { bg: '#FFF8E1', text: '#B45309', border: '#FCD34D' } : { bg: '#F3F4F6', text: '#374151', border: '#D1D5DB' };
+
   grid.innerHTML = list.map(p => {
     const totalQty = cart.filter(i => i.productId === p.id).reduce((s, i) => s + i.qty, 0);
+    const metalLabel = p.specs?.metal || '';
+    const purityLabel = pur ? pur.name : (p.specs?.metal || '');
     return `
     <div class="product-card">
       <div class="product-image" style="position:relative;">
@@ -402,6 +649,10 @@ function renderProducts(list) {
       <div class="product-info">
         <p style="font-size:11px;color:#9CA3AF;margin-bottom:3px;">${p.sku}</p>
         <h3 class="product-name">${p.name}</h3>
+        <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px;flex-wrap:wrap;">
+          <span style="display:inline-flex;align-items:center;gap:3px;background:${metalTagColor.bg};color:${metalTagColor.text};border:1px solid ${metalTagColor.border};border-radius:6px;padding:2px 7px;font-size:10px;font-weight:700;">${mat?.icon||'🔩'} ${metalLabel}</span>
+          ${pur ? `<span style="background:#EFF6FF;color:#1D4ED8;border:1px solid #BFDBFE;border-radius:6px;padding:2px 7px;font-size:10px;font-weight:700;">${pur.tag}</span>` : ''}
+        </div>
         <p class="product-meta">${p.variants.length} biến thể · Tồn ${p.variants.reduce((s,v)=>s+v.stock,0)}</p>
         <p class="product-price" style="color:#0052CC;">${p.priceRange}</p>
         <div class="product-actions">
@@ -446,9 +697,91 @@ function selectCustomer(id) {
   document.getElementById('btnSelectCustomer').style.display = '';
   document.getElementById('btnCustomerLabel').textContent = selectedCustomer.name;
   closeCustomerModal();
+  // Reset all orders for new customer
+  selectedMaterial = null;
+  selectedPurity   = null;
+  cart = [];
+  orders = [{ id: 1, cart: [], material: null, purity: null }];
+  activeOrderId = 1;
+  orderSeq = 1;
+  renderSubHeader();
+  openMaterialModal();
+}
+
+// ═══════════════════════════════════════════════════
+// MATERIAL & PURITY MODAL
+// ═══════════════════════════════════════════════════
+function openMaterialModal() {
+  const isEdit = selectedMaterial !== null;
+  document.getElementById('materialCloseBtn').style.display = isEdit ? '' : 'none';
+  document.getElementById('materialStepLabel').textContent = isEdit ? 'Thay đổi nguyên liệu' : 'Bước 2 / 3';
+  renderMaterialOptions();
+  showStep('stepMaterial');
+  document.getElementById('materialModal').classList.add('active');
+}
+
+function closeMaterialModal() {
+  document.getElementById('materialModal').classList.remove('active');
+}
+
+function showStep(stepId) {
+  ['stepMaterial', 'stepPurity'].forEach(id => {
+    document.getElementById(id).style.display = id === stepId ? '' : 'none';
+  });
+}
+
+function renderMaterialOptions() {
+  document.getElementById('materialOptions').innerHTML = MATERIALS.map(m => `
+    <div onclick="selectMaterial('${m.id}')" style="display:flex;align-items:center;gap:16px;padding:18px;border:2px solid ${selectedMaterial?.id===m.id ? m.border : '#E5E7EB'};border-radius:14px;cursor:pointer;transition:all .15s;background:${selectedMaterial?.id===m.id ? m.bg : 'white'};margin-bottom:12px;"
+      onmouseover="this.style.borderColor='${m.border}';this.style.background='${m.bg}'"
+      onmouseout="this.style.borderColor='${selectedMaterial?.id===m.id ? m.border : '#E5E7EB'}';this.style.background='${selectedMaterial?.id===m.id ? m.bg : 'white'}'">
+      <div style="width:56px;height:56px;border-radius:50%;background:${m.bg};border:2px solid ${m.border};display:flex;align-items:center;justify-content:center;font-size:28px;flex-shrink:0;">${m.icon}</div>
+      <div style="flex:1;">
+        <div style="font-size:16px;font-weight:700;color:#111827;">${m.name}</div>
+        <div style="font-size:12px;color:#6B7280;margin-top:2px;">${m.desc}</div>
+      </div>
+      <div style="color:#9CA3AF;font-size:20px;">›</div>
+    </div>`).join('');
+}
+
+function selectMaterial(id) {
+  selectedMaterial = MATERIALS.find(m => m.id === id);
+  renderPurityOptions();
+  showStep('stepPurity');
+  document.getElementById('pmMaterialName').textContent = selectedMaterial.icon + ' ' + selectedMaterial.name;
+}
+
+function renderPurityOptions() {
+  const list = PURITIES[selectedMaterial.id] || [];
+  const isGold = selectedMaterial.id === 'vang';
+  document.getElementById('purityTitle').textContent = isGold ? 'Chọn tuổi vàng' : 'Chọn tuổi bạc';
+  document.getElementById('purityOptions').innerHTML = list.map(p => `
+    <div onclick="selectPurity('${p.id}')" style="display:flex;align-items:center;gap:14px;padding:16px;border:2px solid ${selectedPurity?.id===p.id ? (isGold?'#D49000':'#A0A0A0') : '#E5E7EB'};border-radius:12px;cursor:pointer;transition:all .15s;background:${selectedPurity?.id===p.id ? (isGold?'#FFF8E1':'#F5F5F5') : 'white'};margin-bottom:10px;"
+      onmouseover="this.style.borderColor='${isGold?'#D49000':'#A0A0A0'}';this.style.background='${isGold?'#FFF8E1':'#F5F5F5'}'"
+      onmouseout="this.style.borderColor='${selectedPurity?.id===p.id?(isGold?'#D49000':'#A0A0A0'):'#E5E7EB'}';this.style.background='${selectedPurity?.id===p.id?(isGold?'#FFF8E1':'#F5F5F5'):'white'}'">
+      <div style="width:48px;height:48px;border-radius:10px;background:${isGold?'#FEF3C7':'#F3F4F6'};border:2px solid ${isGold?'#FCD34D':'#D1D5DB'};display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:${isGold?'#92400E':'#374151'};flex-shrink:0;">${p.tag}</div>
+      <div style="flex:1;">
+        <div style="font-size:15px;font-weight:700;color:#111827;">${p.name}</div>
+        <div style="font-size:12px;color:#6B7280;margin-top:1px;">${p.desc}</div>
+      </div>
+      <div style="color:#9CA3AF;font-size:20px;">›</div>
+    </div>`).join('');
+}
+
+function backToMaterial() {
+  selectedPurity = null;
+  renderMaterialOptions();
+  showStep('stepMaterial');
+}
+
+function selectPurity(id) {
+  selectedPurity = PURITIES[selectedMaterial.id].find(p => p.id === id);
+  saveOrderState();
+  closeMaterialModal();
+  renderSubHeader();
   renderCartSidebar();
-  renderProducts(PRODUCTS);
-  showNotification(`Đã chọn: ${selectedCustomer.name}`);
+  renderProducts(getFilteredProducts());
+  showNotification(`✓ ${selectedMaterial.name} · ${selectedPurity.name}`);
 }
 
 // Header customer dropdown
@@ -466,6 +799,8 @@ function toggleHeaderCustomerDD(e) {
 
 function changeHeaderCustomer() {
   document.getElementById('headerCustomerDD').style.display = 'none';
+  selectedMaterial = null;
+  selectedPurity   = null;
   openCustomerModal();
 }
 
@@ -497,6 +832,7 @@ function openProductModal(productId) {
   pmWholesaleQtys  = {};
   pmCustomerNote   = '';
   pmCustomerReqs   = [];
+  pmReqDetails     = {};
   pmQuickRows      = [];
   pmQuickSeq       = 0;
   pmActiveVersion  = pmCurrentProduct.versions?.[0] || null;
@@ -648,15 +984,36 @@ function renderRetailPanel() {
     <div class="pm-retail-section">
       <div class="pm-retail-label">📋 Yêu cầu khách hàng</div>
       <div style="display:flex;flex-wrap:wrap;gap:6px;">
-        ${CUSTOMER_REQUIREMENTS.map(r => `
-          <button onclick="toggleReq('${r}')" style="padding:5px 12px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;transition:all .15s;border:1.5px solid ${pmCustomerReqs.includes(r)?'#0052CC':'#E5E7EB'};background:${pmCustomerReqs.includes(r)?'#EFF6FF':'white'};color:${pmCustomerReqs.includes(r)?'#0052CC':'#6B7280'};">
-            ${pmCustomerReqs.includes(r)?'✓ ':''}${r}
-          </button>`).join('')}
+        ${CUSTOMER_REQUIREMENTS.map(r => {
+          const active = pmCustomerReqs.includes(r.id);
+          return `<button onclick="toggleReq('${r.id}')" style="padding:5px 12px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;transition:all .15s;border:1.5px solid ${active?'#0052CC':'#E5E7EB'};background:${active?'#EFF6FF':'white'};color:${active?'#0052CC':'#6B7280'};">
+            ${active?'✓ ':''}${r.name}
+          </button>`;
+        }).join('')}
       </div>
     </div>
     <div class="pm-retail-section">
-      <div class="pm-retail-label">📝 Ghi chú thêm</div>
-      <textarea id="pmCustomerNote" style="width:100%;border:1px solid #E5E7EB;border-radius:8px;padding:10px 12px;font-size:13px;font-family:inherit;color:#374151;resize:none;min-height:50px;" placeholder="Ghi chú thêm cho sản phẩm này...">${pmCustomerNote || ''}</textarea>
+      <div class="pm-retail-label">📝 Chi tiết thay đổi</div>
+      ${pmCustomerReqs.filter(id => CUSTOMER_REQUIREMENTS.find(r => r.id === id)?.details).length > 0
+        ? `<div style="display:flex;flex-direction:column;gap:8px;margin-bottom:10px;">
+            ${pmCustomerReqs.map(id => {
+              const req = CUSTOMER_REQUIREMENTS.find(r => r.id === id);
+              if (!req?.details) return '';
+              const selected = pmReqDetails[id] || '';
+              return `<div style="background:#F9FAFB;border:1px solid #E5E7EB;border-radius:10px;padding:10px 12px;">
+                <div style="font-size:11px;font-weight:700;color:#6B7280;margin-bottom:6px;text-transform:uppercase;letter-spacing:.3px;">${req.name}</div>
+                <div style="display:flex;flex-wrap:wrap;gap:5px;">
+                  ${req.details.map(d => {
+                    const isSel = selected === d;
+                    return `<button onclick="selectReqDetail('${id}','${d.replace(/'/g,"\\'")}')" style="padding:4px 10px;border-radius:16px;font-size:11px;font-weight:600;cursor:pointer;transition:all .12s;border:1.5px solid ${isSel?'#0052CC':'#D1D5DB'};background:${isSel?'#0052CC':'white'};color:${isSel?'white':'#374151'};">${d}</button>`;
+                  }).join('')}
+                </div>
+              </div>`;
+            }).join('')}
+          </div>`
+        : `<div style="padding:10px;background:#F9FAFB;border:1px solid #E5E7EB;border-radius:8px;font-size:12px;color:#9CA3AF;text-align:center;">Chọn yêu cầu ở trên để xem chi tiết thay đổi</div>`
+      }
+      <textarea id="pmCustomerNote" style="width:100%;border:1px solid #E5E7EB;border-radius:8px;padding:10px 12px;font-size:13px;font-family:inherit;color:#374151;resize:none;min-height:40px;margin-top:6px;" placeholder="Ghi chú thêm...">${pmCustomerNote || ''}</textarea>
     </div>
     ${!pmRetailSize
       ? '<div style="padding:12px;background:#FEF3C7;border-radius:8px;font-size:13px;color:#92400E;">← Vui lòng chọn kích thước</div>'
@@ -676,11 +1033,20 @@ function saveCustomerNote() {
   if (el) pmCustomerNote = el.value;
 }
 
-function toggleReq(req) {
+function toggleReq(reqId) {
   saveCustomerNote();
-  pmCustomerReqs = pmCustomerReqs.includes(req)
-    ? pmCustomerReqs.filter(r => r !== req)
-    : [...pmCustomerReqs, req];
+  if (pmCustomerReqs.includes(reqId)) {
+    pmCustomerReqs = pmCustomerReqs.filter(r => r !== reqId);
+    delete pmReqDetails[reqId];
+  } else {
+    pmCustomerReqs = [...pmCustomerReqs, reqId];
+  }
+  renderRetailPanel();
+}
+
+function selectReqDetail(reqId, detail) {
+  saveCustomerNote();
+  pmReqDetails[reqId] = pmReqDetails[reqId] === detail ? '' : detail;
   renderRetailPanel();
 }
 
@@ -859,7 +1225,7 @@ function addToCart(goToOrder = false) {
 
   closeProductModal();
   updateStickyBtn();
-  renderProducts(PRODUCTS);
+  renderProducts(getFilteredProducts());
   showNotification(`✓ Đã thêm ${added} sản phẩm vào giỏ`);
 
   if (goToOrder) setTimeout(() => openCartSidebar(), 300);
@@ -872,7 +1238,7 @@ function quickAdd(productId, e) {
   const v = p.variants[0];
   addCartItem(p.id, p.name, p.sku, v.sku, v.color, v.size, 1, v.wholesalePrice);
   updateStickyBtn();
-  renderProducts(PRODUCTS);
+  renderProducts(getFilteredProducts());
   showNotification(`✓ Đã thêm ${p.name} vào giỏ`);
 }
 
@@ -891,7 +1257,7 @@ function closeCartSidebar() {
 }
 
 function renderCartSidebar() {
-  document.getElementById('csTitle').textContent = 'Giỏ hàng';
+  document.getElementById('csTitle').textContent = `Đặt hàng ${activeOrderId}`;
   document.getElementById('csBadge').textContent = cart.length;
 
   // Customer
@@ -939,18 +1305,72 @@ function renderCartSidebar() {
   const total      = subtotal - discount;
   const mauCount   = [...new Set(cart.map(i => i.productId))].length;
 
+  // All-orders summary
+  const otherOrders = orders.filter(o => o.id !== activeOrderId && o.cart.length > 0);
+  const allOrdersTotal = orders.reduce((s, o) => s + o.cart.reduce((s2, i) => s2 + i.price * i.qty, 0), 0);
+  const allOrdersItems = orders.reduce((s, o) => s + o.cart.reduce((s2, i) => s2 + i.qty, 0), 0);
+  const allOrdersDiscount = selectedCustomer?.discount ? Math.round(allOrdersTotal * Math.abs(selectedCustomer.discount) / 100) : 0;
+
+  const allOrdersSummaryHtml = otherOrders.length > 0 ? `
+    <div style="background:#F0F7FF;border:1px solid #BFDBFE;border-radius:10px;padding:10px 12px;margin-bottom:8px;">
+      <div style="font-size:11px;font-weight:700;color:#1D4ED8;margin-bottom:6px;">📦 Tất cả đặt hàng (${orders.filter(o => o.cart.length > 0).length})</div>
+      ${orders.filter(o => o.cart.length > 0).map(o => {
+        const oTotal = o.cart.reduce((s, i) => s + i.price * i.qty, 0);
+        const oQty = o.cart.reduce((s, i) => s + i.qty, 0);
+        const matIcon = o.material?.icon || '';
+        const purTag = o.purity?.tag || '';
+        return `<div style="display:flex;justify-content:space-between;font-size:12px;color:#374151;padding:2px 0;">
+          <span>${o.id === activeOrderId ? '→ ' : ''}Đặt hàng ${o.id} ${matIcon}${purTag}</span>
+          <span>${oQty} sp · ${fmt(oTotal)}</span>
+        </div>`;
+      }).join('')}
+      <div style="display:flex;justify-content:space-between;font-size:13px;font-weight:700;color:#0052CC;padding-top:6px;margin-top:6px;border-top:1px solid #BFDBFE;">
+        <span>Tổng tất cả</span>
+        <span>${fmt(allOrdersTotal - allOrdersDiscount)}</span>
+      </div>
+    </div>` : '';
+
   document.getElementById('csSummary').innerHTML = `
     <div class="cs-summary-meta">${mauCount} mẫu · ${cart.length} biến thể · ${totalItems} sản phẩm</div>
     <div class="cs-summary-row"><span>Tạm tính</span><span>${fmt(subtotal)}</span></div>
     ${discount ? `<div class="cs-summary-row"><span>Chiết khấu (${selectedCustomer.discount}%)</span><span style="color:#EF4444;">-${fmt(discount)}</span></div>` : ''}
     <div class="cs-summary-total"><span>Tổng cộng</span><span>${fmt(total)}</span></div>
+    ${allOrdersSummaryHtml}
   `;
+
+  // Show/hide "checkout all" button
+  const checkoutAllBtn = document.getElementById('csCheckoutAllBtn');
+  if (checkoutAllBtn) {
+    const filledOrders = orders.filter(o => o.cart.length > 0);
+    checkoutAllBtn.style.display = filledOrders.length > 1 ? '' : 'none';
+    checkoutAllBtn.textContent = `📦 Tạo tất cả đơn hàng (${filledOrders.length})`;
+  }
 }
 
-function goToCheckout() {
+function goToCheckout(mode = 'single') {
   if (!selectedCustomer) { showNotification('Vui lòng chọn khách hàng', 'error'); return; }
-  if (cart.length === 0) { showNotification('Giỏ hàng đang trống', 'error'); return; }
-  sessionStorage.setItem('cartData', JSON.stringify({ customer: selectedCustomer, cart }));
+  saveOrderState();
+
+  if (mode === 'all') {
+    const allCarts = orders.filter(o => o.cart.length > 0);
+    if (allCarts.length === 0) { showNotification('Tất cả giỏ hàng đang trống', 'error'); return; }
+    sessionStorage.setItem('cartData', JSON.stringify({
+      customer: selectedCustomer,
+      orders: allCarts.map(o => ({
+        id: o.id,
+        cart: [...o.cart],
+        material: o.material,
+        purity: o.purity,
+      })),
+    }));
+  } else {
+    if (cart.length === 0) { showNotification('Giỏ hàng đang trống', 'error'); return; }
+    sessionStorage.setItem('cartData', JSON.stringify({
+      customer: selectedCustomer,
+      cart,
+      orders: [{ id: activeOrderId, cart, material: selectedMaterial, purity: selectedPurity }],
+    }));
+  }
   window.location.href = 'checkout.html';
 }
 
@@ -964,9 +1384,111 @@ function updateStickyBtn() {
 
   document.getElementById('stickyCartBtn').style.display = totalMau > 0 ? 'flex' : 'none';
   document.getElementById('cartCount').textContent       = totalMau;
-  document.getElementById('stickyOrderName').textContent = 'Giỏ hàng';
+  document.getElementById('stickyOrderName').textContent = `Đặt hàng ${activeOrderId}`;
   document.getElementById('stickyCartMeta').textContent  = `${totalMau} mẫu · ${totalQty} sp`;
   document.getElementById('stickyCartTotal').textContent = `Tổng: ${fmt(total)}`;
+}
+
+// ═══════════════════════════════════════════════════
+// BARCODE SCANNER
+// ═══════════════════════════════════════════════════
+let barcodeStream = null;
+
+function openBarcodeModal() {
+  document.getElementById('barcodeModal').classList.add('active');
+  document.getElementById('barcodeManualInput').value = '';
+  document.getElementById('barcodeResult').innerHTML = '';
+  document.getElementById('barcodeCameraStatus').style.display = 'flex';
+  document.getElementById('barcodeCameraStatus').textContent = 'Đang khởi động camera...';
+  startBarcodeCamera();
+}
+
+function closeBarcodeModal() {
+  document.getElementById('barcodeModal').classList.remove('active');
+  stopBarcodeCamera();
+}
+
+document.getElementById('barcodeModal').addEventListener('click', e => {
+  if (e.target === document.getElementById('barcodeModal')) closeBarcodeModal();
+});
+
+async function startBarcodeCamera() {
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({
+      video: { facingMode: 'environment', width: { ideal: 1280 }, height: { ideal: 720 } }
+    });
+    barcodeStream = stream;
+    const video = document.getElementById('barcodeVideo');
+    video.srcObject = stream;
+    document.getElementById('barcodeCameraStatus').style.display = 'none';
+
+    // Try BarcodeDetector API (supported on Chrome/Safari)
+    if ('BarcodeDetector' in window) {
+      const detector = new BarcodeDetector({ formats: ['ean_13', 'ean_8', 'code_128', 'code_39', 'qr_code', 'upc_a', 'upc_e'] });
+      detectBarcode(video, detector);
+    } else {
+      document.getElementById('barcodeCameraStatus').style.display = 'flex';
+      document.getElementById('barcodeCameraStatus').innerHTML = '⚠️ Trình duyệt chưa hỗ trợ quét tự động<br><span style="font-size:11px;opacity:.7;">Hãy nhập mã thủ công bên dưới</span>';
+    }
+  } catch (err) {
+    document.getElementById('barcodeCameraStatus').style.display = 'flex';
+    document.getElementById('barcodeCameraStatus').innerHTML = '📷 Không thể truy cập camera<br><span style="font-size:11px;opacity:.7;">Hãy nhập mã thủ công bên dưới</span>';
+  }
+}
+
+async function detectBarcode(video, detector) {
+  if (!barcodeStream) return;
+  try {
+    const barcodes = await detector.detect(video);
+    if (barcodes.length > 0) {
+      const code = barcodes[0].rawValue;
+      document.getElementById('barcodeManualInput').value = code;
+      if (navigator.vibrate) navigator.vibrate(100);
+      submitBarcode();
+      return;
+    }
+  } catch (e) {}
+  if (barcodeStream) requestAnimationFrame(() => detectBarcode(video, detector));
+}
+
+function stopBarcodeCamera() {
+  if (barcodeStream) {
+    barcodeStream.getTracks().forEach(t => t.stop());
+    barcodeStream = null;
+  }
+  const video = document.getElementById('barcodeVideo');
+  if (video) video.srcObject = null;
+}
+
+function submitBarcode() {
+  const code = document.getElementById('barcodeManualInput').value.trim();
+  if (!code) return;
+
+  // Search by SKU match
+  const resultEl = document.getElementById('barcodeResult');
+  const product = PRODUCTS.find(p => p.sku.toLowerCase() === code.toLowerCase() || p.variants.some(v => v.sku.toLowerCase() === code.toLowerCase()));
+
+  if (product) {
+    resultEl.innerHTML = `
+      <div style="background:#D1FAE5;border:1px solid #A7F3D0;border-radius:8px;padding:12px;display:flex;align-items:center;gap:12px;">
+        <span style="font-size:24px;">✅</span>
+        <div style="flex:1;">
+          <div style="font-size:13px;font-weight:700;color:#065F46;">${product.name}</div>
+          <div style="font-size:11px;color:#047857;">${product.sku} · ${product.variants.length} biến thể</div>
+        </div>
+        <button onclick="closeBarcodeModal();openProductModal(${product.id})" style="background:#0052CC;color:white;border:none;border-radius:6px;padding:8px 14px;font-size:12px;font-weight:700;cursor:pointer;">Xem</button>
+      </div>`;
+    if (navigator.vibrate) navigator.vibrate(100);
+  } else {
+    resultEl.innerHTML = `
+      <div style="background:#FEF2F2;border:1px solid #FECACA;border-radius:8px;padding:12px;display:flex;align-items:center;gap:10px;">
+        <span style="font-size:20px;">❌</span>
+        <div>
+          <div style="font-size:13px;font-weight:600;color:#991B1B;">Không tìm thấy sản phẩm</div>
+          <div style="font-size:11px;color:#B91C1C;">Mã "${code}" không khớp với sản phẩm nào</div>
+        </div>
+      </div>`;
+  }
 }
 
 // ═══════════════════════════════════════════════════
@@ -1013,4 +1535,5 @@ document.addEventListener('keydown', e => {
 // ═══════════════════════════════════════════════════
 renderProducts(PRODUCTS);
 updateStickyBtn();
+renderSubHeader();
 renderCustomerList(CUSTOMERS);

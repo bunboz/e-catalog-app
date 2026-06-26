@@ -941,9 +941,8 @@ function quickSelectMaterial(matId) {
 function openMaterialModal() {
   const isEdit = selectedMaterial !== null;
   document.getElementById('materialCloseBtn').style.display = isEdit ? '' : 'none';
-  document.getElementById('materialStepLabel').textContent = isEdit ? 'Thay đổi nguyên liệu' : 'Bước 2 / 3';
+  document.getElementById('materialStepLabel').textContent = isEdit ? 'Thay đổi nguyên liệu' : 'Chọn nguyên liệu';
   renderMaterialOptions();
-  showStep('stepMaterial');
   document.getElementById('materialModal').classList.add('active');
 }
 
@@ -951,11 +950,6 @@ function closeMaterialModal() {
   document.getElementById('materialModal').classList.remove('active');
 }
 
-function showStep(stepId) {
-  ['stepMaterial', 'stepPurity'].forEach(id => {
-    document.getElementById(id).style.display = id === stepId ? '' : 'none';
-  });
-}
 
 function renderMaterialOptions() {
   document.getElementById('materialOptions').innerHTML = MATERIALS.map(m => `
@@ -973,42 +967,12 @@ function renderMaterialOptions() {
 
 function selectMaterial(id) {
   selectedMaterial = MATERIALS.find(m => m.id === id);
-  renderPurityOptions();
-  showStep('stepPurity');
-  document.getElementById('pmMaterialName').textContent = selectedMaterial.icon + ' ' + selectedMaterial.name;
-}
-
-function renderPurityOptions() {
-  const list = PURITIES[selectedMaterial.id] || [];
-  const isGold = selectedMaterial.id === 'vang';
-  document.getElementById('purityTitle').textContent = isGold ? 'Chọn tuổi vàng' : 'Chọn tuổi bạc';
-  document.getElementById('purityOptions').innerHTML = list.map(p => `
-    <div onclick="selectPurity('${p.id}')" style="display:flex;align-items:center;gap:14px;padding:16px;border:2px solid ${selectedPurity?.id===p.id ? (isGold?'#D49000':'#A0A0A0') : '#E5E7EB'};border-radius:12px;cursor:pointer;transition:all .15s;background:${selectedPurity?.id===p.id ? (isGold?'#FFF8E1':'#F5F5F5') : 'white'};margin-bottom:10px;"
-      onmouseover="this.style.borderColor='${isGold?'#D49000':'#A0A0A0'}';this.style.background='${isGold?'#FFF8E1':'#F5F5F5'}'"
-      onmouseout="this.style.borderColor='${selectedPurity?.id===p.id?(isGold?'#D49000':'#A0A0A0'):'#E5E7EB'}';this.style.background='${selectedPurity?.id===p.id?(isGold?'#FFF8E1':'#F5F5F5'):'white'}'">
-      <div style="width:48px;height:48px;border-radius:10px;background:${isGold?'#FEF3C7':'#F3F4F6'};border:2px solid ${isGold?'#FCD34D':'#D1D5DB'};display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:${isGold?'#92400E':'#374151'};flex-shrink:0;">${p.tag}</div>
-      <div style="flex:1;">
-        <div style="font-size:15px;font-weight:700;color:#111827;">${p.name}</div>
-        <div style="font-size:12px;color:#6B7280;margin-top:1px;">${p.desc}</div>
-      </div>
-      <div style="color:#9CA3AF;font-size:20px;">›</div>
-    </div>`).join('');
-}
-
-function backToMaterial() {
-  selectedPurity = null;
-  renderMaterialOptions();
-  showStep('stepMaterial');
-}
-
-function selectPurity(id) {
-  selectedPurity = PURITIES[selectedMaterial.id].find(p => p.id === id);
   saveOrderState();
   closeMaterialModal();
   renderSubHeader();
   renderCartSidebar();
   renderProducts(getFilteredProducts());
-  showNotification(`✓ ${selectedMaterial.name} · ${selectedPurity.name}`);
+  showNotification(`✓ ${selectedMaterial.icon} ${selectedMaterial.name}`);
 }
 
 // CSS for approval modal

@@ -38,6 +38,30 @@ const MATERIALS = [
   { id: 'kimcuong', name: 'Kim Cương',icon: '💠', desc: 'Diamond · Đỉnh cao xa xỉ',        color: '#A5F3FC', bg: '#ECFEFF', border: '#67E8F9' },
 ];
 
+const PURITIES = {
+  'bac': [
+    { id: '925',  name: 'Bạc 925', desc: 'Sterling Silver · 92.5% bạc', tag: '925' },
+    { id: '950',  name: 'Bạc 950', desc: 'Britannia · 95% bạc',         tag: '950' },
+    { id: '999',  name: 'Bạc 999', desc: 'Fine Silver · 99.9% bạc',     tag: '999' },
+  ],
+  'vang': [
+    { id: '10k',  name: 'Vàng 10K', desc: '41.7% vàng · Phù hợp ngân sách', tag: '10K' },
+    { id: '14k',  name: 'Vàng 14K', desc: '58.3% vàng · Độ bền cao',        tag: '14K' },
+    { id: '18k',  name: 'Vàng 18K', desc: '75% vàng · Phổ biến nhất',       tag: '18K' },
+    { id: '24k',  name: 'Vàng 24K', desc: '99.9% vàng nguyên chất',         tag: '24K' },
+  ],
+  'bachkim': [
+    { id: '900pt', name: 'Pt900', desc: '90% platinum',                   tag: 'Pt900' },
+    { id: '950pt', name: 'Pt950', desc: '95% platinum · Phổ biến nhất',   tag: 'Pt950' },
+    { id: '999pt', name: 'Pt999', desc: '99.9% platinum nguyên chất',     tag: 'Pt999' },
+  ],
+  'kimcuong': [
+    { id: 'gia',   name: 'GIA Certified', desc: 'Có chứng nhận GIA quốc tế',   tag: 'GIA' },
+    { id: 'igi',   name: 'IGI Certified', desc: 'Có chứng nhận IGI quốc tế',   tag: 'IGI' },
+    { id: 'none',  name: 'Không chứng nhận', desc: 'Kim cương không có cert',   tag: 'Non-cert' },
+  ],
+};
+
 
 // Chủng loại: Vòng tay=BE, Nhẫn=RG, Dây chuyền=NE, Bông tai=ER, Mặt dây nữ=PT
 // SPU (DrawingNo): {chủng loại 2}{số 6}{A00}                    → BT000001A00
@@ -311,6 +335,7 @@ const PRODUCTS = [
 // ═══════════════════════════════════════════════════
 let selectedCustomer = null;
 let selectedMaterial = null;
+let selectedPurity   = null;
 let cart = [];
 
 // Multi-order state
@@ -327,11 +352,13 @@ function saveOrderState() {
   if (!o) return;
   o.cart = cart;
   o.material = selectedMaterial;
+  o.purity   = selectedPurity;
 }
 
 function loadOrderState(order) {
   cart = order.cart;
   selectedMaterial = order.material;
+  selectedPurity   = order.purity;
 }
 
 function switchOrder(id) {
@@ -486,8 +513,8 @@ function renderSubHeader() {
 
   const matPurHtml = selectedMaterial ? `
     <div class="sub-chips">
-      <button class="sub-chip" onclick="openMaterialModal()" title="Đổi nguyên liệu">
-        ${selectedMaterial.icon} ${selectedMaterial.name}
+      <button class="sub-chip" onclick="openMaterialModal()" title="Đổi nguyên liệu & tuổi">
+        ${selectedMaterial.icon} ${selectedMaterial.name}${selectedPurity ? ' · ' + selectedPurity.tag : ''}
         <span style="margin-left:4px;opacity:.5;font-size:10px;">✎</span>
       </button>
     </div>` : '';
@@ -859,8 +886,9 @@ function selectCustomer(id) {
   closeCustomerModal();
   // Reset all orders for new customer
   selectedMaterial = null;
+  selectedPurity   = null;
   cart = [];
-  orders = [{ id: 1, cart: [], material: null }];
+  orders = [{ id: 1, cart: [], material: null, purity: null }];
   activeOrderId = 1;
   orderSeq = 1;
   renderSubHeader();
@@ -967,12 +995,56 @@ function renderMaterialOptions() {
 
 function selectMaterial(id) {
   selectedMaterial = MATERIALS.find(m => m.id === id);
+  selectedPurity = null;
+  renderPurityOptions();
+  showStep('stepPurity');
+  document.getElementById('pmMaterialName').textContent = selectedMaterial.icon + ' ' + selectedMaterial.name;
+}
+
+function showStep(stepId) {
+  ['stepMaterial', 'stepPurity'].forEach(sid => {
+    document.getElementById(sid).style.display = sid === stepId ? '' : 'none';
+  });
+}
+
+function renderPurityOptions() {
+  const list = PURITIES[selectedMaterial.id] || [];
+  const isGold = selectedMaterial.id === 'vang';
+  const isDiamond = selectedMaterial.id === 'kimcuong';
+  const accentColor = isGold ? '#D49000' : isDiamond ? '#0891B2' : '#A0A0A0';
+  const accentBg    = isGold ? '#FFF8E1' : isDiamond ? '#ECFEFF' : '#F5F5F5';
+  const tagColor    = isGold ? '#92400E' : isDiamond ? '#0E7490' : '#374151';
+  const tagBg       = isGold ? '#FEF3C7' : isDiamond ? '#CFFAFE' : '#F3F4F6';
+  const tagBorder   = isGold ? '#FCD34D' : isDiamond ? '#67E8F9' : '#D1D5DB';
+  document.getElementById('purityTitle').textContent =
+    isGold ? 'Chọn tuổi vàng' : isDiamond ? 'Chọn chứng nhận' : selectedMaterial.id === 'bachkim' ? 'Chọn tuổi bạch kim' : 'Chọn tuổi bạc';
+  document.getElementById('purityOptions').innerHTML = list.map(p => `
+    <div onclick="selectPurity('${p.id}')" style="display:flex;align-items:center;gap:14px;padding:16px;border:2px solid ${selectedPurity?.id===p.id ? accentColor : '#E5E7EB'};border-radius:12px;cursor:pointer;transition:all .15s;background:${selectedPurity?.id===p.id ? accentBg : 'white'};margin-bottom:10px;"
+      onmouseover="this.style.borderColor='${accentColor}';this.style.background='${accentBg}'"
+      onmouseout="this.style.borderColor='${selectedPurity?.id===p.id ? accentColor : '#E5E7EB'}';this.style.background='${selectedPurity?.id===p.id ? accentBg : 'white'}'">
+      <div style="width:48px;height:48px;border-radius:10px;background:${tagBg};border:2px solid ${tagBorder};display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:${tagColor};flex-shrink:0;">${p.tag}</div>
+      <div style="flex:1;">
+        <div style="font-size:15px;font-weight:700;color:#111827;">${p.name}</div>
+        <div style="font-size:12px;color:#6B7280;margin-top:1px;">${p.desc}</div>
+      </div>
+      <div style="color:#9CA3AF;font-size:20px;">›</div>
+    </div>`).join('');
+}
+
+function backToMaterial() {
+  selectedPurity = null;
+  renderMaterialOptions();
+  showStep('stepMaterial');
+}
+
+function selectPurity(id) {
+  selectedPurity = PURITIES[selectedMaterial.id].find(p => p.id === id);
   saveOrderState();
   closeMaterialModal();
   renderSubHeader();
   renderCartSidebar();
   renderProducts(getFilteredProducts());
-  showNotification(`✓ ${selectedMaterial.icon} ${selectedMaterial.name}`);
+  showNotification(`✓ ${selectedMaterial.icon} ${selectedMaterial.name} · ${selectedPurity.tag}`);
 }
 
 // CSS for approval modal

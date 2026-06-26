@@ -763,14 +763,7 @@ function showMaterialLanding() {
       <div style="width:80px;height:80px;border-radius:50%;background:#FFFBEB;display:flex;align-items:center;justify-content:center;font-size:36px;">🏷</div>
       <div style="font-size:20px;font-weight:800;color:#111827;">Chào ${selectedCustomer?.name || ''}!</div>
       <div style="font-size:14px;color:#6B7280;max-width:400px;text-align:center;line-height:1.6;">Vui lòng chọn nguyên liệu và tuổi vàng để bắt đầu tạo đơn đặt hàng</div>
-      <div style="display:flex;gap:12px;margin-top:12px;">
-        ${MATERIALS.map(m => `
-          <button onclick="quickSelectMaterial('${m.id}')" style="display:flex;flex-direction:column;align-items:center;gap:8px;padding:20px 32px;background:white;border:2px solid ${m.border};border-radius:14px;cursor:pointer;transition:all .2s;min-width:140px;" onmouseover="this.style.borderColor='#0052CC';this.style.transform='translateY(-2px)';this.style.boxShadow='0 4px 12px rgba(0,0,0,.1)'" onmouseout="this.style.borderColor='${m.border}';this.style.transform='none';this.style.boxShadow='none'">
-            <span style="font-size:40px;">${m.icon}</span>
-            <span style="font-size:15px;font-weight:700;color:#111827;">${m.name}</span>
-            <span style="font-size:11px;color:#6B7280;">${m.desc}</span>
-          </button>`).join('')}
-      </div>
+      <button onclick="openMaterialModal()" style="margin-top:16px;background:#0052CC;color:white;border:none;border-radius:12px;padding:14px 32px;font-size:15px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:8px;box-shadow:0 4px 12px rgba(0,82,204,.25);transition:all .2s;" onmouseover="this.style.background='#003D99';this.style.transform='translateY(-1px)'" onmouseout="this.style.background='#0052CC';this.style.transform='none'">🏷 Chọn nguyên liệu</button>
     </div>`;
 }
 

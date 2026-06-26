@@ -32,20 +32,50 @@ const CUSTOMER_REQUIREMENTS = [
 ];
 
 const MATERIALS = [
-  { id: 'bac',  name: 'Bạc',   icon: '🥈', desc: 'Bạc nguyên chất và hợp kim bạc',          color: '#C0C0C0', bg: '#F5F5F5', border: '#A0A0A0' },
-  { id: 'vang', name: 'Vàng',  icon: '🥇', desc: 'Vàng nguyên chất và hợp kim vàng',        color: '#FFB800', bg: '#FFF8E1', border: '#D49000' },
+  { id: 'bac',      name: 'Bạc',       icon: '🥈', desc: 'Bạc nguyên chất và hợp kim bạc',      color: '#C0C0C0', bg: '#F5F5F5', border: '#A0A0A0' },
+  { id: 'vang',     name: 'Vàng',      icon: '🥇', desc: 'Vàng nguyên chất và hợp kim vàng',    color: '#FFB800', bg: '#FFF8E1', border: '#D49000' },
+  { id: 'bachkim',  name: 'Bạch Kim',  icon: '💎', desc: 'Platinum · Quý hiếm, bền vĩnh viễn',  color: '#E8E8E8', bg: '#FAFAFA', border: '#BDBDBD' },
+  { id: 'titan',    name: 'Titan',     icon: '⚙️', desc: 'Titanium · Siêu nhẹ, chống dị ứng',   color: '#78909C', bg: '#ECEFF1', border: '#90A4AE' },
+  { id: 'thepkhongri', name: 'Thép',   icon: '🔩', desc: 'Stainless Steel · Bền, giá tốt',      color: '#607D8B', bg: '#ECEFF1', border: '#78909C' },
+  { id: 'dongthau', name: 'Đồng thau', icon: '🔔', desc: 'Brass · Màu vàng cổ điển',            color: '#CD7F32', bg: '#FFF3E0', border: '#BF8040' },
 ];
 
 const PURITIES = {
   'bac': [
+    { id: '800', name: 'Bạc 800', desc: '80% bạc · Hợp kim cứng', tag: '800' },
     { id: '925', name: 'Bạc 925', desc: 'Sterling Silver · 92.5% bạc', tag: '925' },
+    { id: '950', name: 'Bạc 950', desc: 'Britannia Silver · 95% bạc', tag: '950' },
     { id: '999', name: 'Bạc 999', desc: 'Fine Silver · 99.9% bạc nguyên chất', tag: '999' },
   ],
   'vang': [
+    { id: '8k',  name: 'Vàng 8K',  desc: '33.3% vàng · Tiết kiệm', tag: '8K' },
     { id: '10k', name: 'Vàng 10K', desc: '41.7% vàng · Phù hợp ngân sách', tag: '10K' },
     { id: '14k', name: 'Vàng 14K', desc: '58.3% vàng · Độ bền cao', tag: '14K' },
     { id: '18k', name: 'Vàng 18K', desc: '75% vàng · Phổ biến nhất', tag: '18K' },
+    { id: '22k', name: 'Vàng 22K', desc: '91.6% vàng · Gần nguyên chất', tag: '22K' },
     { id: '24k', name: 'Vàng 24K', desc: '99.9% vàng nguyên chất', tag: '24K' },
+  ],
+  'bachkim': [
+    { id: '850pt', name: 'Pt850', desc: '85% platinum', tag: 'Pt850' },
+    { id: '900pt', name: 'Pt900', desc: '90% platinum', tag: 'Pt900' },
+    { id: '950pt', name: 'Pt950', desc: '95% platinum · Phổ biến nhất', tag: 'Pt950' },
+    { id: '999pt', name: 'Pt999', desc: '99.9% platinum nguyên chất', tag: 'Pt999' },
+  ],
+  'titan': [
+    { id: 'gr1', name: 'Grade 1', desc: 'CP Titanium · Nguyên chất nhất', tag: 'Gr1' },
+    { id: 'gr2', name: 'Grade 2', desc: 'CP Titanium · Phổ biến nhất', tag: 'Gr2' },
+    { id: 'gr5', name: 'Grade 5', desc: 'Ti-6Al-4V · Siêu bền', tag: 'Gr5' },
+    { id: 'gr23', name: 'Grade 23', desc: 'Ti-6Al-4V ELI · Y tế', tag: 'Gr23' },
+  ],
+  'thepkhongri': [
+    { id: '304', name: 'Thép 304', desc: '18/8 · Phổ biến nhất', tag: '304' },
+    { id: '316', name: 'Thép 316', desc: 'Marine Grade · Chống ăn mòn cao', tag: '316' },
+    { id: '316l', name: 'Thép 316L', desc: 'Low Carbon · Trang sức cao cấp', tag: '316L' },
+  ],
+  'dongthau': [
+    { id: 'c260', name: 'Brass C260', desc: 'Cartridge Brass · 70% đồng', tag: 'C260' },
+    { id: 'c360', name: 'Brass C360', desc: 'Free Cutting · Dễ gia công', tag: 'C360' },
+    { id: 'c230', name: 'Red Brass', desc: '85% đồng · Màu đỏ hồng', tag: 'C230' },
   ],
 };
 

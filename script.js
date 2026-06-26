@@ -394,6 +394,11 @@ function renderSubHeader() {
     ${matPurHtml}`;
 }
 
+// Returns true if product has real selectable sizes (size > 0)
+function productHasSizes(product) {
+  return product.variants.some(v => v.size > 0);
+}
+
 // Product modal state
 let pmCurrentProduct = null;
 let pmCurrentTab     = 'retail';
@@ -934,6 +939,10 @@ function openProductModal(productId) {
   pmRetailColor    = null;
   pmRetailSize     = null;
   pmRetailQty      = 1;
+  // Auto-select size=0 for products without real sizes
+  const _initColors = [...new Set(pmCurrentProduct.variants.map(v => v.color))];
+  pmRetailColor = _initColors[0];
+  if (!productHasSizes(pmCurrentProduct)) pmRetailSize = 0;
   pmWholesaleQtys  = {};
   pmCustomerNote   = '';
   pmCustomerReqs   = [];
@@ -1023,7 +1032,7 @@ function renderRetailPanel() {
   if (!pmRetailColor) pmRetailColor = colors[0];
   const sizesForColor = pmCurrentProduct.variants.filter(v => v.color === pmRetailColor);
   const stones = [...new Set(pmCurrentProduct.variants.map(v => v.stone))];
-  const selectedVariant = pmRetailSize ? pmCurrentProduct.variants.find(v => v.color===pmRetailColor && v.size===pmRetailSize) : null;
+  const selectedVariant = pmRetailSize !== null ? pmCurrentProduct.variants.find(v => v.color===pmRetailColor && v.size===pmRetailSize) : null;
 
   const versions = pmCurrentProduct.versions || [];
 
@@ -1068,15 +1077,19 @@ function renderRetailPanel() {
           </div>`).join('')}
       </div>
     </div>` : ''}
+    ${productHasSizes(pmCurrentProduct) ? `
     <div class="pm-retail-section">
       <div class="pm-retail-label">📏 Kích thước</div>
       <div class="pm-size-grid">
         ${sizesForColor.map(v => `
           <button class="pm-size-btn ${pmRetailSize===v.size?'active':''}" onclick="selectRetailSize(${v.size})">
-            ${v.size || '—'}<span class="size-stock">Còn ${v.stock}</span>
+            ${v.size}<span class="size-stock">Còn ${v.stock}</span>
           </button>`).join('')}
       </div>
-    </div>
+    </div>` : `
+    <div class="pm-retail-section">
+      <div class="pm-retail-label" style="color:#9CA3AF;">📏 Kích thước: <span style="font-weight:400;">Free size</span></div>
+    </div>`}
     <div class="pm-retail-section">
       <div class="pm-retail-label">🔢 Số lượng</div>
       <div class="pm-retail-qty">
@@ -1121,11 +1134,11 @@ function renderRetailPanel() {
       }
       <textarea id="pmCustomerNote" style="width:100%;border:1px solid #E5E7EB;border-radius:8px;padding:10px 12px;font-size:13px;font-family:inherit;color:#374151;resize:none;min-height:40px;margin-top:6px;" placeholder="Ghi chú thêm...">${pmCustomerNote || ''}</textarea>
     </div>
-    ${!pmRetailSize
+    ${productHasSizes(pmCurrentProduct) && pmRetailSize === null
       ? '<div style="padding:12px;background:#FEF3C7;border-radius:8px;font-size:13px;color:#92400E;">← Vui lòng chọn kích thước</div>'
       : selectedVariant ? `<div class="pm-price-box">
           <div>
-            <div class="pm-price-label">${pmRetailColor} · Size ${pmRetailSize} · ${selectedVariant.stone}</div>
+            <div class="pm-price-label">${pmRetailColor}${pmRetailSize ? ' · Size ' + pmRetailSize : ' · Free size'} · ${selectedVariant.stone}</div>
             <div style="font-size:11px;color:#9CA3AF;margin-top:2px;">ItemNo: ${selectedVariant.sku} · ${selectedVariant.weight}</div>
           </div>
           <div class="pm-price-value">${fmt(selectedVariant.price * pmRetailQty)}</div>
@@ -1167,7 +1180,7 @@ function selectVersion(versionId) {
 function selectRetailColor(color) {
   saveCustomerNote();
   pmRetailColor = color;
-  pmRetailSize  = null;
+  pmRetailSize  = productHasSizes(pmCurrentProduct) ? null : 0;
   updateProductImage();
   renderRetailPanel();
 }
@@ -1289,7 +1302,7 @@ function updatePmFooter() {
 
   if (pmCurrentTab === 'retail') {
     const v = pmCurrentProduct?.variants.find(v => v.color===pmRetailColor && v.size===pmRetailSize);
-    if (v && pmRetailSize) { variants = 1; totalQty = pmRetailQty; totalPrice = v.price * pmRetailQty; }
+    if (v && (pmRetailSize !== null || !productHasSizes(pmCurrentProduct))) { variants = 1; totalQty = pmRetailQty; totalPrice = v.price * pmRetailQty; }
   } else {
     Object.entries(pmWholesaleQtys).forEach(([sku, qty]) => {
       if (qty > 0) {
@@ -1314,7 +1327,10 @@ function addToCart(goToOrder = false) {
 
   if (pmCurrentTab === 'retail') {
     const v = p.variants.find(v => v.color===pmRetailColor && v.size===pmRetailSize);
-    if (!v) { showNotification('Vui lòng chọn màu và size', 'error'); return; }
+    if (!v) {
+      showNotification(productHasSizes(p) ? 'Vui lòng chọn màu và size' : 'Vui lòng chọn màu', 'error');
+      return;
+    }
     addCartItem(p.id, p.name, p.drawingNo, v.sku, v.color, v.size, pmRetailQty, v.price);
     added = pmRetailQty;
   } else {

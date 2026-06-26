@@ -771,11 +771,66 @@ function selectPurity(id) {
   selectedPurity = PURITIES[selectedMaterial.id].find(p => p.id === id);
   saveOrderState();
   closeMaterialModal();
-  renderSubHeader();
-  renderCartSidebar();
-  renderProducts(getFilteredProducts());
-  showNotification(`✓ ${selectedMaterial.name} · ${selectedPurity.name}`);
+  showApprovalModal();
 }
+
+function showApprovalModal() {
+  // Create overlay
+  const overlay = document.createElement('div');
+  overlay.id = 'approvalOverlay';
+  overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:2000;display:flex;align-items:center;justify-content:center;animation:fadeIn .2s;';
+
+  overlay.innerHTML = `
+    <div style="background:white;border-radius:16px;padding:40px 48px;text-align:center;max-width:400px;width:90%;box-shadow:0 20px 60px rgba(0,0,0,.2);animation:slideUp .3s ease-out;">
+      <div id="approvalSpinner" style="margin:0 auto 20px;">
+        <svg width="56" height="56" viewBox="0 0 56 56" style="animation:spin 1s linear infinite;">
+          <circle cx="28" cy="28" r="24" fill="none" stroke="#E5E7EB" stroke-width="4"/>
+          <circle cx="28" cy="28" r="24" fill="none" stroke="#0052CC" stroke-width="4" stroke-dasharray="100 52" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div id="approvalIcon" style="display:none;font-size:48px;margin-bottom:16px;">✅</div>
+      <div id="approvalTitle" style="font-size:18px;font-weight:800;color:#111827;margin-bottom:8px;">Đang chờ duyệt...</div>
+      <div id="approvalDesc" style="font-size:13px;color:#6B7280;line-height:1.6;">
+        ${selectedCustomer?.name || ''}<br>
+        ${selectedMaterial?.icon || ''} ${selectedMaterial?.name || ''} · ${selectedPurity?.tag || ''}
+      </div>
+      <div id="approvalStatus" style="margin-top:16px;font-size:12px;color:#9CA3AF;">Đang xác minh thông tin đơn hàng...</div>
+    </div>
+  `;
+  document.body.appendChild(overlay);
+
+  // Simulate approval steps
+  setTimeout(() => {
+    document.getElementById('approvalStatus').textContent = 'Đang kiểm tra quyền đặt hàng...';
+  }, 800);
+
+  setTimeout(() => {
+    document.getElementById('approvalStatus').textContent = 'Đang xác nhận với hệ thống...';
+  }, 1600);
+
+  setTimeout(() => {
+    // Approved!
+    document.getElementById('approvalSpinner').style.display = 'none';
+    document.getElementById('approvalIcon').style.display = '';
+    document.getElementById('approvalTitle').textContent = 'Đã được duyệt!';
+    document.getElementById('approvalTitle').style.color = '#059669';
+    document.getElementById('approvalStatus').innerHTML = '<span style="color:#059669;font-weight:600;">✓ Bạn có thể bắt đầu đặt hàng</span>';
+  }, 2400);
+
+  setTimeout(() => {
+    overlay.remove();
+    renderSubHeader();
+    renderCartSidebar();
+    renderProducts(getFilteredProducts());
+  }, 3200);
+}
+
+// CSS for approval modal
+document.head.insertAdjacentHTML('beforeend', `<style>
+@keyframes fadeIn { from { opacity:0 } to { opacity:1 } }
+@keyframes slideUp { from { transform:translateY(30px);opacity:0 } to { transform:translateY(0);opacity:1 } }
+@keyframes spin { to { transform:rotate(360deg) } }
+</style>`);
 
 // Header customer dropdown
 function toggleHeaderCustomerDD(e) {

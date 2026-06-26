@@ -765,7 +765,7 @@ function showMaterialLanding() {
       <div style="font-size:14px;color:#6B7280;max-width:400px;text-align:center;line-height:1.6;">Vui lòng chọn nguyên liệu và tuổi vàng để bắt đầu tạo đơn đặt hàng</div>
       <div style="display:flex;gap:12px;margin-top:12px;">
         ${MATERIALS.map(m => `
-          <button onclick="openMaterialModal()" style="display:flex;flex-direction:column;align-items:center;gap:8px;padding:20px 32px;background:white;border:2px solid ${m.border};border-radius:14px;cursor:pointer;transition:all .2s;min-width:140px;" onmouseover="this.style.borderColor='#0052CC';this.style.transform='translateY(-2px)';this.style.boxShadow='0 4px 12px rgba(0,0,0,.1)'" onmouseout="this.style.borderColor='${m.border}';this.style.transform='none';this.style.boxShadow='none'">
+          <button onclick="quickSelectMaterial('${m.id}')" style="display:flex;flex-direction:column;align-items:center;gap:8px;padding:20px 32px;background:white;border:2px solid ${m.border};border-radius:14px;cursor:pointer;transition:all .2s;min-width:140px;" onmouseover="this.style.borderColor='#0052CC';this.style.transform='translateY(-2px)';this.style.boxShadow='0 4px 12px rgba(0,0,0,.1)'" onmouseout="this.style.borderColor='${m.border}';this.style.transform='none';this.style.boxShadow='none'">
             <span style="font-size:40px;">${m.icon}</span>
             <span style="font-size:15px;font-weight:700;color:#111827;">${m.name}</span>
             <span style="font-size:11px;color:#6B7280;">${m.desc}</span>
@@ -777,6 +777,15 @@ function showMaterialLanding() {
 // ═══════════════════════════════════════════════════
 // MATERIAL & PURITY MODAL
 // ═══════════════════════════════════════════════════
+function quickSelectMaterial(matId) {
+  selectedMaterial = MATERIALS.find(m => m.id === matId);
+  saveOrderState();
+  // Open modal directly at purity step
+  openMaterialModal();
+  // Auto-select material and show purity
+  selectMaterial(matId);
+}
+
 function openMaterialModal() {
   const isEdit = selectedMaterial !== null;
   document.getElementById('materialCloseBtn').style.display = isEdit ? '' : 'none';

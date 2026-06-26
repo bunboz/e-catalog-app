@@ -49,9 +49,12 @@ const PURITIES = {
   ],
 };
 
+// DrawingNo (SPU) format: {chủng loại 2}{số tĩnh tiền 6}{routing 3}
+// ItemNo (SKU) format:    {nguyên liệu 1}{màu SP 2}{chủng loại 2}{số tĩnh tiền 6}{routing 3}{BOM 3}{phụ liệu chính+màu 5}{phụ liệu phụ+màu 5}{kích thước 3}
 const PRODUCTS = [
   {
-    id: 1, name: 'Nhẫn Bạc Nữ Đính Đá CZ Hoa Cổ', sku: 'RG-CZ-001',
+    id: 1, name: 'Nhẫn Bạc Nữ Đính Đá CZ Hoa Cổ',
+    drawingNo: 'RG000001A00', // SPU
     badge: 'Bán chạy', category: 'nhan', priceRange: '450.000đ – 490.000đ',
     image: 'ring_v1',
     specs: { group: 'Nhẫn', purity: '925', material: 'Diamond', metal: 'Bạc 925', weight: '2.1-2.4g', materialId: 'bac', purityId: '925' },
@@ -61,18 +64,19 @@ const PRODUCTS = [
       { id: 'v3', name: 'Đơn Giản', image: 'ring_v3', desc: 'Kiểu trơn tối giản' },
     ],
     variants: [
-      { sku:'RG-CZ-001-S6-W',  color:'Bạc',          size:6,  weight:'2.1g', stone:'CZ Trắng', stock:42, price:450000, wholesalePrice:450000 },
-      { sku:'RG-CZ-001-S7-W',  color:'Bạc',          size:7,  weight:'2.2g', stone:'CZ Trắng', stock:38, price:450000, wholesalePrice:450000 },
-      { sku:'RG-CZ-001-S8-W',  color:'Bạc',          size:8,  weight:'2.3g', stone:'CZ Trắng', stock:30, price:450000, wholesalePrice:450000 },
-      { sku:'RG-CZ-001-S9-W',  color:'Bạc',          size:9,  weight:'2.4g', stone:'CZ Trắng', stock:15, price:450000, wholesalePrice:450000 },
-      { sku:'RG-CZ-001-S7-B',  color:'Mạ Vàng',      size:7,  weight:'2.2g', stone:'CZ Trắng', stock:25, price:480000, wholesalePrice:480000 },
-      { sku:'RG-CZ-001-S8-B',  color:'Mạ Vàng',      size:8,  weight:'2.3g', stone:'CZ Trắng', stock:20, price:480000, wholesalePrice:480000 },
-      { sku:'RG-CZ-001-S7-R',  color:'Mạ Vàng Hồng', size:7,  weight:'2.2g', stone:'CZ Hồng',  stock:18, price:490000, wholesalePrice:490000 },
-      { sku:'RG-CZ-001-S8-R',  color:'Mạ Vàng Hồng', size:8,  weight:'2.3g', stone:'CZ Hồng',  stock:12, price:490000, wholesalePrice:490000 },
+      { sku:'SS0RG000001A00A00CZWH1-----006', color:'Bạc',          size:6,  weight:'2.1g', stone:'CZ Trắng', stock:42, price:450000, wholesalePrice:450000 },
+      { sku:'SS0RG000001A00A00CZWH1-----007', color:'Bạc',          size:7,  weight:'2.2g', stone:'CZ Trắng', stock:38, price:450000, wholesalePrice:450000 },
+      { sku:'SS0RG000001A00A00CZWH1-----008', color:'Bạc',          size:8,  weight:'2.3g', stone:'CZ Trắng', stock:30, price:450000, wholesalePrice:450000 },
+      { sku:'SS0RG000001A00A00CZWH1-----009', color:'Bạc',          size:9,  weight:'2.4g', stone:'CZ Trắng', stock:15, price:450000, wholesalePrice:450000 },
+      { sku:'SY0RG000001A00A00CZWH1-----007', color:'Mạ Vàng',      size:7,  weight:'2.2g', stone:'CZ Trắng', stock:25, price:480000, wholesalePrice:480000 },
+      { sku:'SY0RG000001A00A00CZWH1-----008', color:'Mạ Vàng',      size:8,  weight:'2.3g', stone:'CZ Trắng', stock:20, price:480000, wholesalePrice:480000 },
+      { sku:'SR0RG000001A00A00CZRO1-----007', color:'Mạ Vàng Hồng', size:7,  weight:'2.2g', stone:'CZ Hồng',  stock:18, price:490000, wholesalePrice:490000 },
+      { sku:'SR0RG000001A00A00CZRO1-----008', color:'Mạ Vàng Hồng', size:8,  weight:'2.3g', stone:'CZ Hồng',  stock:12, price:490000, wholesalePrice:490000 },
     ],
   },
   {
-    id: 2, name: 'Lắc Tay Vàng 18K Charm Đính Đá', sku: 'LT-18K-002',
+    id: 2, name: 'Lắc Tay Vàng 18K Charm Đính Đá',
+    drawingNo: 'BR000002A00',
     badge: 'Bán chạy', category: 'vong-tay', priceRange: '2.650.000đ – 3.000.000đ',
     image: 'bracelet_v1',
     specs: { group: 'Lắc tay', purity: '75Y', material: 'CZ / Kim cương', metal: 'Vàng 18K', weight: '3.8-4.2g', materialId: 'vang', purityId: '18k' },
@@ -83,15 +87,16 @@ const PRODUCTS = [
         photos: { 'Vàng 18K': 'images/ghe&caphe/vang.png', 'Vàng Trắng': 'images/ghe&caphe/do.png' } },
     ],
     variants: [
-      { sku:'LT-18K-002-14-V',  color:'Vàng 18K',    size:14, weight:'3.8g', stone:'Đá CZ',    stock:56, price:2650000, wholesalePrice:2517500 },
-      { sku:'LT-18K-002-15-V',  color:'Vàng 18K',    size:15, weight:'4.0g', stone:'Đá CZ',    stock:34, price:2750000, wholesalePrice:2612500 },
-      { sku:'LT-18K-002-16-V',  color:'Vàng 18K',    size:16, weight:'4.2g', stone:'Đá CZ',    stock:20, price:2900000, wholesalePrice:2755000 },
-      { sku:'LT-18K-002-14-W',  color:'Vàng Trắng',  size:14, weight:'3.8g', stone:'Kim cương', stock:12, price:3000000, wholesalePrice:2850000 },
-      { sku:'LT-18K-002-15-W',  color:'Vàng Trắng',  size:15, weight:'4.0g', stone:'Kim cương', stock:8,  price:3200000, wholesalePrice:3040000 },
+      { sku:'GY0BR000002A00A00CZGO1DI001014', color:'Vàng 18K',    size:14, weight:'3.8g', stone:'Đá CZ',    stock:56, price:2650000, wholesalePrice:2517500 },
+      { sku:'GY0BR000002A00A00CZGO1DI001015', color:'Vàng 18K',    size:15, weight:'4.0g', stone:'Đá CZ',    stock:34, price:2750000, wholesalePrice:2612500 },
+      { sku:'GY0BR000002A00A00CZGO1DI001016', color:'Vàng 18K',    size:16, weight:'4.2g', stone:'Đá CZ',    stock:20, price:2900000, wholesalePrice:2755000 },
+      { sku:'GW0BR000002A00A00DI001CZGO1014', color:'Vàng Trắng',  size:14, weight:'3.8g', stone:'Kim cương', stock:12, price:3000000, wholesalePrice:2850000 },
+      { sku:'GW0BR000002A00A00DI001CZGO1015', color:'Vàng Trắng',  size:15, weight:'4.0g', stone:'Kim cương', stock:8,  price:3200000, wholesalePrice:3040000 },
     ],
   },
   {
-    id: 3, name: 'Dây Chuyền Vàng 18K Mặt Bướm', sku: 'DC-18K-003',
+    id: 3, name: 'Dây Chuyền Vàng 18K Mặt Bướm',
+    drawingNo: 'NK000003A00',
     badge: 'Mới', category: 'day-chuyen', priceRange: '3.200.000đ – 3.600.000đ',
     image: 'chain_v1',
     specs: { group: 'Dây chuyền', purity: '75Y', material: 'Ruby', metal: 'Vàng 18K', weight: '5.1-5.6g', materialId: 'vang', purityId: '18k' },
@@ -100,14 +105,15 @@ const PRODUCTS = [
       { id: 'v2', name: 'Mặt Hoa', image: 'chain_v2', desc: 'Mặt dây hình hoa' },
     ],
     variants: [
-      { sku:'DC-18K-003-40',    color:'Vàng 18K',    size:40, weight:'5.1g', stone:'Đá Ruby',  stock:22, price:3200000, wholesalePrice:3040000 },
-      { sku:'DC-18K-003-42',    color:'Vàng 18K',    size:42, weight:'5.3g', stone:'Đá Ruby',  stock:18, price:3350000, wholesalePrice:3182500 },
-      { sku:'DC-18K-003-45',    color:'Vàng 18K',    size:45, weight:'5.6g', stone:'Đá Ruby',  stock:10, price:3600000, wholesalePrice:3420000 },
-      { sku:'DC-18K-003-40-W',  color:'Vàng Trắng',  size:40, weight:'5.1g', stone:'Đá Ruby',  stock:14, price:3400000, wholesalePrice:3230000 },
+      { sku:'GY0NK000003A00A00RBRD1-----040', color:'Vàng 18K',    size:40, weight:'5.1g', stone:'Đá Ruby',  stock:22, price:3200000, wholesalePrice:3040000 },
+      { sku:'GY0NK000003A00A00RBRD1-----042', color:'Vàng 18K',    size:42, weight:'5.3g', stone:'Đá Ruby',  stock:18, price:3350000, wholesalePrice:3182500 },
+      { sku:'GY0NK000003A00A00RBRD1-----045', color:'Vàng 18K',    size:45, weight:'5.6g', stone:'Đá Ruby',  stock:10, price:3600000, wholesalePrice:3420000 },
+      { sku:'GW0NK000003A00A00RBRD1-----040', color:'Vàng Trắng',  size:40, weight:'5.1g', stone:'Đá Ruby',  stock:14, price:3400000, wholesalePrice:3230000 },
     ],
   },
   {
-    id: 4, name: 'Bông Tai Bạc Đính Đá Ngọc Trai', sku: 'BT-AG-004',
+    id: 4, name: 'Bông Tai Bạc Đính Đá Ngọc Trai',
+    drawingNo: 'ER000004A00',
     badge: 'Có sẵn', category: 'bong-tai', priceRange: '320.000đ – 380.000đ',
     image: 'earring_v1',
     specs: { group: 'Bông tai', purity: '925', material: 'Ngọc Trai', metal: 'Bạc 925', weight: '1.5g', materialId: 'bac', purityId: '925' },
@@ -116,13 +122,14 @@ const PRODUCTS = [
       { id: 'v2', name: 'Tròn', image: 'earring_v2', desc: 'Kiểu tròn cổ điển' },
     ],
     variants: [
-      { sku:'BT-AG-004-W',     color:'Bạc',          size:0,  weight:'1.5g', stone:'Ngọc Trai', stock:64, price:320000, wholesalePrice:320000 },
-      { sku:'BT-AG-004-G',     color:'Mạ Vàng',      size:0,  weight:'1.5g', stone:'Ngọc Trai', stock:45, price:360000, wholesalePrice:360000 },
-      { sku:'BT-AG-004-R',     color:'Mạ Vàng Hồng', size:0,  weight:'1.5g', stone:'Ngọc Trai', stock:38, price:380000, wholesalePrice:380000 },
+      { sku:'SS0ER000004A00A00PLWH1-----000', color:'Bạc',          size:0,  weight:'1.5g', stone:'Ngọc Trai', stock:64, price:320000, wholesalePrice:320000 },
+      { sku:'SY0ER000004A00A00PLWH1-----000', color:'Mạ Vàng',      size:0,  weight:'1.5g', stone:'Ngọc Trai', stock:45, price:360000, wholesalePrice:360000 },
+      { sku:'SR0ER000004A00A00PLWH1-----000', color:'Mạ Vàng Hồng', size:0,  weight:'1.5g', stone:'Ngọc Trai', stock:38, price:380000, wholesalePrice:380000 },
     ],
   },
   {
-    id: 5, name: 'Nhẫn Đôi Bạc Khắc Tên', sku: 'RG-CP-005',
+    id: 5, name: 'Nhẫn Đôi Bạc Khắc Tên',
+    drawingNo: 'RG000005A00',
     badge: 'Nhận đôi', category: 'cap-nhan', priceRange: '550.000đ / cặp',
     image: 'pair_v1',
     specs: { group: 'Cặp nhẫn', purity: '925', material: 'Không', metal: 'Bạc 925', weight: '3.2-3.6g', materialId: 'bac', purityId: '925' },
@@ -131,14 +138,15 @@ const PRODUCTS = [
       { id: 'v2', name: 'Đính Đá', image: 'pair_v2', desc: 'Nhẫn đính đá CZ' },
     ],
     variants: [
-      { sku:'RG-CP-005-S6-W',  color:'Bạc',          size:6,  weight:'3.2g', stone:'Không',   stock:30, price:550000, wholesalePrice:522500 },
-      { sku:'RG-CP-005-S7-W',  color:'Bạc',          size:7,  weight:'3.4g', stone:'Không',   stock:28, price:550000, wholesalePrice:522500 },
-      { sku:'RG-CP-005-S8-W',  color:'Bạc',          size:8,  weight:'3.6g', stone:'Không',   stock:22, price:550000, wholesalePrice:522500 },
-      { sku:'RG-CP-005-S7-G',  color:'Mạ Vàng',      size:7,  weight:'3.4g', stone:'Không',   stock:15, price:580000, wholesalePrice:551000 },
+      { sku:'SS0RG000005A00A00----------006', color:'Bạc',          size:6,  weight:'3.2g', stone:'Không',   stock:30, price:550000, wholesalePrice:522500 },
+      { sku:'SS0RG000005A00A00----------007', color:'Bạc',          size:7,  weight:'3.4g', stone:'Không',   stock:28, price:550000, wholesalePrice:522500 },
+      { sku:'SS0RG000005A00A00----------008', color:'Bạc',          size:8,  weight:'3.6g', stone:'Không',   stock:22, price:550000, wholesalePrice:522500 },
+      { sku:'SY0RG000005A00A00----------007', color:'Mạ Vàng',      size:7,  weight:'3.4g', stone:'Không',   stock:15, price:580000, wholesalePrice:551000 },
     ],
   },
   {
-    id: 6, name: 'Mặt Dây Chuyền Bạc Hoa Sen', sku: 'MD-AG-006',
+    id: 6, name: 'Mặt Dây Chuyền Bạc Hoa Sen',
+    drawingNo: 'PD000006A00',
     badge: 'MOQ thấp', category: 'mat-day', priceRange: '180.000đ – 220.000đ',
     image: 'pendant_v1',
     specs: { group: 'Mặt dây', purity: '925', material: 'Không', metal: 'Bạc 925', weight: '1.2g', materialId: 'bac', purityId: '925' },
@@ -148,9 +156,9 @@ const PRODUCTS = [
       { id: 'v3', name: 'Chữ Phúc', image: 'pendant_v3', desc: 'Mặt chữ Phúc' },
     ],
     variants: [
-      { sku:'MD-AG-006-W',     color:'Bạc',          size:0,  weight:'1.2g', stone:'Không',    stock:80, price:180000, wholesalePrice:180000 },
-      { sku:'MD-AG-006-G',     color:'Mạ Vàng',      size:0,  weight:'1.2g', stone:'Không',    stock:60, price:200000, wholesalePrice:200000 },
-      { sku:'MD-AG-006-R',     color:'Mạ Vàng Hồng', size:0,  weight:'1.2g', stone:'Không',    stock:50, price:220000, wholesalePrice:220000 },
+      { sku:'SS0PD000006A00A00----------000', color:'Bạc',          size:0,  weight:'1.2g', stone:'Không',    stock:80, price:180000, wholesalePrice:180000 },
+      { sku:'SY0PD000006A00A00----------000', color:'Mạ Vàng',      size:0,  weight:'1.2g', stone:'Không',    stock:60, price:200000, wholesalePrice:200000 },
+      { sku:'SR0PD000006A00A00----------000', color:'Mạ Vàng Hồng', size:0,  weight:'1.2g', stone:'Không',    stock:50, price:220000, wholesalePrice:220000 },
     ],
   },
 ];
@@ -586,7 +594,7 @@ document.head.insertAdjacentHTML('beforeend', `<style>
 </style>`);
 
 /** Add item to cart (or increment if exists) */
-function addCartItem(productId, name, sku, variantSku, color, size, qty, price) {
+function addCartItem(productId, name, drawingNo, variantSku, color, size, qty, price) {
   const existing = cart.find(i => i.variantSku === variantSku);
   if (existing) { existing.qty += qty; }
   else {
@@ -595,7 +603,7 @@ function addCartItem(productId, name, sku, variantSku, color, size, qty, price) 
     const purId = prod?.specs?.purityId || selectedPurity?.id || '';
     const mat = MATERIALS.find(m => m.id === matId);
     const pur = PURITIES[matId]?.find(p => p.id === purId);
-    cart.push({ productId, name, sku, variantSku, color, size, qty, price, materialId: matId, purityId: purId, materialName: mat?.name || '', materialIcon: mat?.icon || '🔩', purityTag: pur?.tag || '' });
+    cart.push({ productId, name, drawingNo, variantSku, color, size, qty, price, materialId: matId, purityId: purId, materialName: mat?.name || '', materialIcon: mat?.icon || '🔩', purityTag: pur?.tag || '' });
   }
 }
 
@@ -632,7 +640,7 @@ function renderProducts(list) {
         ${totalQty > 0 ? `<span style="position:absolute;top:10px;right:10px;background:#0052CC;color:white;border-radius:50%;width:26px;height:26px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;">${totalQty}</span>` : ''}
       </div>
       <div class="product-info">
-        <p style="font-size:11px;color:#9CA3AF;margin-bottom:3px;">${p.sku}</p>
+        <p style="font-size:11px;color:#9CA3AF;margin-bottom:3px;">${p.drawingNo}</p>
         <h3 class="product-name">${p.name}</h3>
         <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px;flex-wrap:wrap;">
           <span style="display:inline-flex;align-items:center;gap:3px;background:${metalTagColor.bg};color:${metalTagColor.text};border:1px solid ${metalTagColor.border};border-radius:6px;padding:2px 7px;font-size:10px;font-weight:700;">${mat?.icon||'🔩'} ${metalLabel}</span>
@@ -823,7 +831,7 @@ function openProductModal(productId) {
   pmActiveVersion  = pmCurrentProduct.versions?.[0] || null;
 
   document.getElementById('pmBadge').textContent    = pmCurrentProduct.badge;
-  document.getElementById('pmSku').textContent       = pmCurrentProduct.sku;
+  document.getElementById('pmSku').textContent       = pmCurrentProduct.drawingNo;
   document.getElementById('pmName').textContent      = pmCurrentProduct.name;
   switchPmTab('retail');
   updateProductImage();
@@ -862,7 +870,7 @@ function updateProductImage() {
   if (s) {
     const stones = [...new Set(pmCurrentProduct.variants.map(v => v.stone))].filter(s => s !== 'Không');
     const rows = [
-      ['Mã sản phẩm', pmCurrentProduct.sku],
+      ['DrawingNo (SPU)', pmCurrentProduct.drawingNo],
       ['Nhóm sản phẩm', s.group],
       ['Tuổi vàng', s.purity],
       ['Chất liệu', s.material],
@@ -1005,7 +1013,7 @@ function renderRetailPanel() {
       : selectedVariant ? `<div class="pm-price-box">
           <div>
             <div class="pm-price-label">${pmRetailColor} · Size ${pmRetailSize} · ${selectedVariant.stone}</div>
-            <div style="font-size:11px;color:#9CA3AF;margin-top:2px;">SKU: ${selectedVariant.sku} · ${selectedVariant.weight}</div>
+            <div style="font-size:11px;color:#9CA3AF;margin-top:2px;">ItemNo: ${selectedVariant.sku} · ${selectedVariant.weight}</div>
           </div>
           <div class="pm-price-value">${fmt(selectedVariant.price * pmRetailQty)}</div>
         </div>` : ''}
@@ -1194,14 +1202,14 @@ function addToCart(goToOrder = false) {
   if (pmCurrentTab === 'retail') {
     const v = p.variants.find(v => v.color===pmRetailColor && v.size===pmRetailSize);
     if (!v) { showNotification('Vui lòng chọn màu và size', 'error'); return; }
-    addCartItem(p.id, p.name, p.sku, v.sku, v.color, v.size, pmRetailQty, v.price);
+    addCartItem(p.id, p.name, p.drawingNo, v.sku, v.color, v.size, pmRetailQty, v.price);
     added = pmRetailQty;
   } else {
     Object.entries(pmWholesaleQtys).forEach(([sku, qty]) => {
       if (qty <= 0) return;
       const v = p.variants.find(v => v.sku === sku);
       if (!v) return;
-      addCartItem(p.id, p.name, p.sku, sku, v.color, v.size, qty, v.wholesalePrice);
+      addCartItem(p.id, p.name, p.drawingNo, sku, v.color, v.size, qty, v.wholesalePrice);
       added += qty;
     });
   }
@@ -1221,7 +1229,7 @@ function quickAdd(productId, e) {
   if (!selectedCustomer) { showNotification('Vui lòng chọn khách hàng trước', 'error'); openCustomerModal(); return; }
   const p = PRODUCTS.find(p => p.id === productId);
   const v = p.variants[0];
-  addCartItem(p.id, p.name, p.sku, v.sku, v.color, v.size, 1, v.wholesalePrice);
+  addCartItem(p.id, p.name, p.drawingNo, v.sku, v.color, v.size, 1, v.wholesalePrice);
   updateStickyBtn();
   renderProducts(getFilteredProducts());
   showNotification(`✓ Đã thêm ${p.name} vào giỏ`);
@@ -1275,7 +1283,7 @@ function renderCartSidebar() {
           <div class="cs-product-thumb" style="font-size:24px;">${p?.image || '💍'}</div>
           <div class="cs-product-info">
             <div class="cs-product-name">${p?.name}</div>
-            <div class="cs-product-sku">${p?.sku}</div>
+            <div class="cs-product-sku">${p?.drawingNo}</div>
             <div class="cs-product-qty">${items.length} BT · ${totalQty} sp · ${fmt(totalPrice)}</div>
           </div>
           <div class="cs-product-arrow">›</div>
@@ -1451,7 +1459,7 @@ function submitBarcode() {
 
   // Search by SKU match
   const resultEl = document.getElementById('barcodeResult');
-  const product = PRODUCTS.find(p => p.sku.toLowerCase() === code.toLowerCase() || p.variants.some(v => v.sku.toLowerCase() === code.toLowerCase()));
+  const product = PRODUCTS.find(p => p.drawingNo.toLowerCase() === code.toLowerCase() || p.variants.some(v => v.sku.toLowerCase() === code.toLowerCase()));
 
   if (product) {
     resultEl.innerHTML = `
@@ -1459,7 +1467,7 @@ function submitBarcode() {
         <span style="font-size:24px;">✅</span>
         <div style="flex:1;">
           <div style="font-size:13px;font-weight:700;color:#065F46;">${product.name}</div>
-          <div style="font-size:11px;color:#047857;">${product.sku} · ${product.variants.length} biến thể</div>
+          <div style="font-size:11px;color:#047857;">${product.drawingNo} · ${product.variants.length} biến thể</div>
         </div>
         <button onclick="closeBarcodeModal();openProductModal(${product.id})" style="background:#0052CC;color:white;border:none;border-radius:6px;padding:8px 14px;font-size:12px;font-weight:700;cursor:pointer;">Xem</button>
       </div>`;
@@ -1482,7 +1490,7 @@ function submitBarcode() {
 document.getElementById('searchInput').addEventListener('input', e => {
   const q = e.target.value.toLowerCase();
   renderProducts(q
-    ? PRODUCTS.filter(p => p.name.toLowerCase().includes(q) || p.sku.toLowerCase().includes(q) || p.variants.some(v => v.sku.toLowerCase().includes(q)))
+    ? PRODUCTS.filter(p => p.name.toLowerCase().includes(q) || p.drawingNo.toLowerCase().includes(q) || p.variants.some(v => v.sku.toLowerCase().includes(q)))
     : PRODUCTS);
 });
 

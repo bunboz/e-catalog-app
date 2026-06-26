@@ -890,7 +890,7 @@ function confirmOrder() {
                         <div style="font-size:13px;font-weight:600;color:#111827;">${item.name}</div>
                         <div style="font-size:11px;color:#9CA3AF;margin-top:1px;">
                           <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${dot};border:1px solid rgba(0,0,0,.1);vertical-align:middle;"></span>
-                          ${item.color}${item.size ? ' · Size '+item.size : ''} · ${item.sku}
+                          ${item.color}${item.size ? ' · Size '+item.size : ''} · ${item.drawingNo || item.sku}
                         </div>
                       </div>
                       <div style="font-size:14px;font-weight:700;color:${col};min-width:40px;text-align:center;">×${alloc}</div>

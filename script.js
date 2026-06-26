@@ -419,6 +419,25 @@ let pmActiveVersion  = null; // selected version object
 const fmt = n => new Intl.NumberFormat('vi-VN').format(n) + 'đ';
 const getColorDot = color => (COLOR_META[color] || { dot: '#9CA3AF' }).dot;
 
+const STONE_COLOR_MAP = {
+  'CZ Trắng':   { bg: '#F8F8F8',  border: '#D1D5DB' },
+  'CZ Hồng':    { bg: '#F9A8D4',  border: '#EC4899' },
+  'Đá CZ':      { bg: '#93C5FD',  border: '#3B82F6' },
+  'Đá Ruby':    { bg: '#EF4444',  border: '#B91C1C' },
+  'Kim cương':  { bg: '#E0F2FE',  border: '#7DD3FC' },
+  'Ngọc Trai':  { bg: '#FEF9C3',  border: '#FDE047' },
+};
+function getStoneColor(stone) {
+  if (STONE_COLOR_MAP[stone]) return STONE_COLOR_MAP[stone];
+  if (stone.includes('Xanh') || stone.includes('xanh')) return { bg: '#6EE7B7', border: '#059669' };
+  if (stone.includes('Đỏ')   || stone.includes('Ruby'))  return { bg: '#FCA5A5', border: '#EF4444' };
+  if (stone.includes('Tím')  || stone.includes('tím'))   return { bg: '#C4B5FD', border: '#7C3AED' };
+  if (stone.includes('Vàng') || stone.includes('vàng'))  return { bg: '#FDE68A', border: '#F59E0B' };
+  if (stone.includes('Hồng') || stone.includes('hồng'))  return { bg: '#F9A8D4', border: '#EC4899' };
+  if (stone.includes('Trắng'))                            return { bg: '#F3F4F6', border: '#D1D5DB' };
+  return { bg: '#E0E7FF', border: '#6366F1' };
+}
+
 // Color palettes for metal rendering
 const METAL_COLORS = {
   'Bạc':          { main: '#C0C0C0', light: '#E8E8E8', dark: '#909090', bg: '#f5f5f5' },
@@ -993,10 +1012,8 @@ function updateProductImage() {
     const rows = [
       ['DrawingNo (SPU)', pmCurrentProduct.drawingNo],
       ['Nhóm sản phẩm', s.group],
-      ['Tuổi vàng', s.purity],
-      ['Chất liệu', s.material],
       ['Nguyên liệu', s.metal],
-      stones.length > 0 ? ['Màu đá', stones.join(', ')] : null,
+      stones.length > 0 ? ['Loại đá', stones.join(', ')] : null,
       ['Trọng lượng', s.weight],
     ].filter(Boolean);
     specsEl.innerHTML = `
@@ -1068,11 +1085,11 @@ function renderRetailPanel() {
     </div>
     ${stones.length > 0 && stones[0] !== 'Không' ? `
     <div class="pm-retail-section">
-      <div class="pm-retail-label">💎 Màu đá</div>
+      <div class="pm-retail-label">💎 Loại đá</div>
       <div class="pm-color-pills">
         ${stones.map(s => `
-          <div class="pm-color-pill" style="cursor:default;opacity:0.8;">
-            <div class="pm-color-dot" style="background:${s.includes('Hồng')?'#F9A8D4':s.includes('Ruby')?'#EF4444':s.includes('Kim cương')?'#E5E7EB':'#E0E7FF'};border:1px solid #ccc;"></div>
+          <div class="pm-color-pill" style="cursor:default;opacity:0.85;">
+            <div class="pm-color-dot" style="background:${getStoneColor(s).bg};border:2px solid ${getStoneColor(s).border};"></div>
             ${s}
           </div>`).join('')}
       </div>

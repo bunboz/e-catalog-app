@@ -49,66 +49,68 @@ const PURITIES = {
   ],
 };
 
-// DrawingNo (SPU) format: {chủng loại 2}{số tĩnh tiền 6}{routing 3}
-// ItemNo (SKU) format:    {nguyên liệu 1}{màu SP 2}{chủng loại 2}{số tĩnh tiền 6}{routing 3}{BOM 3}{phụ liệu chính+màu 5}{phụ liệu phụ+màu 5}{kích thước 3}
+// Chủng loại: Vòng tay=BE, Nhẫn=RG, Dây chuyền=NE, Bông tai=ER, Mặt dây nữ=PT
+// SPU (DrawingNo): {chủng loại 2}{số 6}{A00}                    → BT000001A00
+// Version code:    {chủng loại 2}{số 6}{B01/B02/B03}             → BT000001B01
+// SKU (ItemNo):    {nguyên liệu+màu 3}{chủng loại 2}{số 6}{routing 3}{BOM 3}{phụ liệu chính+màu 5}{phụ liệu phụ+màu 5}{kích thước 2-3}
 const PRODUCTS = [
   {
     id: 1, name: 'Nhẫn Bạc Nữ Đính Đá CZ Hoa Cổ',
-    drawingNo: 'RG000001A00', // SPU
+    drawingNo: 'RG000001A00',
     badge: 'Bán chạy', category: 'nhan', priceRange: '450.000đ – 490.000đ',
     image: 'ring_v1',
     specs: { group: 'Nhẫn', purity: '925', material: 'Diamond', metal: 'Bạc 925', weight: '2.1-2.4g', materialId: 'bac', purityId: '925' },
     versions: [
-      { id: 'v1', name: 'Hoa Cổ Điển', image: 'ring_v1', desc: 'Kiểu đá đơn cổ điển' },
-      { id: 'v2', name: 'Hoa Hiện Đại', image: 'ring_v2', desc: 'Kiểu hoa cách điệu' },
-      { id: 'v3', name: 'Đơn Giản', image: 'ring_v3', desc: 'Kiểu trơn tối giản' },
+      { id: 'v1', name: 'Hoa Cổ Điển', code: 'RG000001B01', image: 'ring_v1', desc: 'Kiểu đá đơn cổ điển' },
+      { id: 'v2', name: 'Hoa Hiện Đại', code: 'RG000001B02', image: 'ring_v2', desc: 'Kiểu hoa cách điệu' },
+      { id: 'v3', name: 'Đơn Giản',     code: 'RG000001B03', image: 'ring_v3', desc: 'Kiểu trơn tối giản' },
     ],
     variants: [
-      { sku:'SS0RG000001A00A00CZWH1-----006', color:'Bạc',          size:6,  weight:'2.1g', stone:'CZ Trắng', stock:42, price:450000, wholesalePrice:450000 },
-      { sku:'SS0RG000001A00A00CZWH1-----007', color:'Bạc',          size:7,  weight:'2.2g', stone:'CZ Trắng', stock:38, price:450000, wholesalePrice:450000 },
-      { sku:'SS0RG000001A00A00CZWH1-----008', color:'Bạc',          size:8,  weight:'2.3g', stone:'CZ Trắng', stock:30, price:450000, wholesalePrice:450000 },
-      { sku:'SS0RG000001A00A00CZWH1-----009', color:'Bạc',          size:9,  weight:'2.4g', stone:'CZ Trắng', stock:15, price:450000, wholesalePrice:450000 },
-      { sku:'SY0RG000001A00A00CZWH1-----007', color:'Mạ Vàng',      size:7,  weight:'2.2g', stone:'CZ Trắng', stock:25, price:480000, wholesalePrice:480000 },
-      { sku:'SY0RG000001A00A00CZWH1-----008', color:'Mạ Vàng',      size:8,  weight:'2.3g', stone:'CZ Trắng', stock:20, price:480000, wholesalePrice:480000 },
-      { sku:'SR0RG000001A00A00CZRO1-----007', color:'Mạ Vàng Hồng', size:7,  weight:'2.2g', stone:'CZ Hồng',  stock:18, price:490000, wholesalePrice:490000 },
-      { sku:'SR0RG000001A00A00CZRO1-----008', color:'Mạ Vàng Hồng', size:8,  weight:'2.3g', stone:'CZ Hồng',  stock:12, price:490000, wholesalePrice:490000 },
+      { sku:'SS0RG000001A00A00CZWH1-----06', color:'Bạc',          size:6,  weight:'2.1g', stone:'CZ Trắng', stock:42, price:450000, wholesalePrice:450000 },
+      { sku:'SS0RG000001A00A00CZWH1-----07', color:'Bạc',          size:7,  weight:'2.2g', stone:'CZ Trắng', stock:38, price:450000, wholesalePrice:450000 },
+      { sku:'SS0RG000001A00A00CZWH1-----08', color:'Bạc',          size:8,  weight:'2.3g', stone:'CZ Trắng', stock:30, price:450000, wholesalePrice:450000 },
+      { sku:'SS0RG000001A00A00CZWH1-----09', color:'Bạc',          size:9,  weight:'2.4g', stone:'CZ Trắng', stock:15, price:450000, wholesalePrice:450000 },
+      { sku:'SY0RG000001A00A00CZWH1-----07', color:'Mạ Vàng',      size:7,  weight:'2.2g', stone:'CZ Trắng', stock:25, price:480000, wholesalePrice:480000 },
+      { sku:'SY0RG000001A00A00CZWH1-----08', color:'Mạ Vàng',      size:8,  weight:'2.3g', stone:'CZ Trắng', stock:20, price:480000, wholesalePrice:480000 },
+      { sku:'SR0RG000001A00A00CZRO1-----07', color:'Mạ Vàng Hồng', size:7,  weight:'2.2g', stone:'CZ Hồng',  stock:18, price:490000, wholesalePrice:490000 },
+      { sku:'SR0RG000001A00A00CZRO1-----08', color:'Mạ Vàng Hồng', size:8,  weight:'2.3g', stone:'CZ Hồng',  stock:12, price:490000, wholesalePrice:490000 },
     ],
   },
   {
     id: 2, name: 'Lắc Tay Vàng 18K Charm Đính Đá',
-    drawingNo: 'BR000002A00',
+    drawingNo: 'BE000002A00',
     badge: 'Bán chạy', category: 'vong-tay', priceRange: '2.650.000đ – 3.000.000đ',
     image: 'bracelet_v1',
     specs: { group: 'Lắc tay', purity: '75Y', material: 'CZ / Kim cương', metal: 'Vàng 18K', weight: '3.8-4.2g', materialId: 'vang', purityId: '18k' },
     versions: [
-      { id: 'v1', name: 'Nón Lá & Vespa', image: 'bracelet_v1', desc: 'Charm nón lá, vespa, đèn lồng',
+      { id: 'v1', name: 'Nón Lá & Vespa', code: 'BE000002B01', image: 'bracelet_v1', desc: 'Charm nón lá, vespa, đèn lồng',
         photos: { 'Vàng 18K': 'images/nonla&vespa/bracelet-v2-vang.png', 'Vàng Trắng': 'images/nonla&vespa/bracelet-v2-tim.png' } },
-      { id: 'v2', name: 'Ghế & Cà Phê', image: 'bracelet_v2', desc: 'Charm ghế nhựa, cà phê phin',
+      { id: 'v2', name: 'Ghế & Cà Phê', code: 'BE000002B02', image: 'bracelet_v2', desc: 'Charm ghế nhựa, cà phê phin',
         photos: { 'Vàng 18K': 'images/ghe&caphe/vang.png', 'Vàng Trắng': 'images/ghe&caphe/do.png' } },
     ],
     variants: [
-      { sku:'GY0BR000002A00A00CZGO1DI001014', color:'Vàng 18K',    size:14, weight:'3.8g', stone:'Đá CZ',    stock:56, price:2650000, wholesalePrice:2517500 },
-      { sku:'GY0BR000002A00A00CZGO1DI001015', color:'Vàng 18K',    size:15, weight:'4.0g', stone:'Đá CZ',    stock:34, price:2750000, wholesalePrice:2612500 },
-      { sku:'GY0BR000002A00A00CZGO1DI001016', color:'Vàng 18K',    size:16, weight:'4.2g', stone:'Đá CZ',    stock:20, price:2900000, wholesalePrice:2755000 },
-      { sku:'GW0BR000002A00A00DI001CZGO1014', color:'Vàng Trắng',  size:14, weight:'3.8g', stone:'Kim cương', stock:12, price:3000000, wholesalePrice:2850000 },
-      { sku:'GW0BR000002A00A00DI001CZGO1015', color:'Vàng Trắng',  size:15, weight:'4.0g', stone:'Kim cương', stock:8,  price:3200000, wholesalePrice:3040000 },
+      { sku:'GY0BE000002A00A00CZGO1DI00114', color:'Vàng 18K',    size:14, weight:'3.8g', stone:'Đá CZ',    stock:56, price:2650000, wholesalePrice:2517500 },
+      { sku:'GY0BE000002A00A00CZGO1DI00115', color:'Vàng 18K',    size:15, weight:'4.0g', stone:'Đá CZ',    stock:34, price:2750000, wholesalePrice:2612500 },
+      { sku:'GY0BE000002A00A00CZGO1DI00116', color:'Vàng 18K',    size:16, weight:'4.2g', stone:'Đá CZ',    stock:20, price:2900000, wholesalePrice:2755000 },
+      { sku:'GW0BE000002A00A00DI001CZGO114', color:'Vàng Trắng',  size:14, weight:'3.8g', stone:'Kim cương', stock:12, price:3000000, wholesalePrice:2850000 },
+      { sku:'GW0BE000002A00A00DI001CZGO115', color:'Vàng Trắng',  size:15, weight:'4.0g', stone:'Kim cương', stock:8,  price:3200000, wholesalePrice:3040000 },
     ],
   },
   {
     id: 3, name: 'Dây Chuyền Vàng 18K Mặt Bướm',
-    drawingNo: 'NK000003A00',
+    drawingNo: 'NE000003A00',
     badge: 'Mới', category: 'day-chuyen', priceRange: '3.200.000đ – 3.600.000đ',
     image: 'chain_v1',
     specs: { group: 'Dây chuyền', purity: '75Y', material: 'Ruby', metal: 'Vàng 18K', weight: '5.1-5.6g', materialId: 'vang', purityId: '18k' },
     versions: [
-      { id: 'v1', name: 'Mặt Bướm', image: 'chain_v1', desc: 'Mặt dây hình bướm' },
-      { id: 'v2', name: 'Mặt Hoa', image: 'chain_v2', desc: 'Mặt dây hình hoa' },
+      { id: 'v1', name: 'Mặt Bướm', code: 'NE000003B01', image: 'chain_v1', desc: 'Mặt dây hình bướm' },
+      { id: 'v2', name: 'Mặt Hoa',  code: 'NE000003B02', image: 'chain_v2', desc: 'Mặt dây hình hoa' },
     ],
     variants: [
-      { sku:'GY0NK000003A00A00RBRD1-----040', color:'Vàng 18K',    size:40, weight:'5.1g', stone:'Đá Ruby',  stock:22, price:3200000, wholesalePrice:3040000 },
-      { sku:'GY0NK000003A00A00RBRD1-----042', color:'Vàng 18K',    size:42, weight:'5.3g', stone:'Đá Ruby',  stock:18, price:3350000, wholesalePrice:3182500 },
-      { sku:'GY0NK000003A00A00RBRD1-----045', color:'Vàng 18K',    size:45, weight:'5.6g', stone:'Đá Ruby',  stock:10, price:3600000, wholesalePrice:3420000 },
-      { sku:'GW0NK000003A00A00RBRD1-----040', color:'Vàng Trắng',  size:40, weight:'5.1g', stone:'Đá Ruby',  stock:14, price:3400000, wholesalePrice:3230000 },
+      { sku:'GY0NE000003A00A00RBRD1-----40', color:'Vàng 18K',    size:40, weight:'5.1g', stone:'Đá Ruby',  stock:22, price:3200000, wholesalePrice:3040000 },
+      { sku:'GY0NE000003A00A00RBRD1-----42', color:'Vàng 18K',    size:42, weight:'5.3g', stone:'Đá Ruby',  stock:18, price:3350000, wholesalePrice:3182500 },
+      { sku:'GY0NE000003A00A00RBRD1-----45', color:'Vàng 18K',    size:45, weight:'5.6g', stone:'Đá Ruby',  stock:10, price:3600000, wholesalePrice:3420000 },
+      { sku:'GW0NE000003A00A00RBRD1-----40', color:'Vàng Trắng',  size:40, weight:'5.1g', stone:'Đá Ruby',  stock:14, price:3400000, wholesalePrice:3230000 },
     ],
   },
   {
@@ -118,13 +120,13 @@ const PRODUCTS = [
     image: 'earring_v1',
     specs: { group: 'Bông tai', purity: '925', material: 'Ngọc Trai', metal: 'Bạc 925', weight: '1.5g', materialId: 'bac', purityId: '925' },
     versions: [
-      { id: 'v1', name: 'Giọt Nước', image: 'earring_v1', desc: 'Kiểu giọt nước' },
-      { id: 'v2', name: 'Tròn', image: 'earring_v2', desc: 'Kiểu tròn cổ điển' },
+      { id: 'v1', name: 'Giọt Nước', code: 'ER000004B01', image: 'earring_v1', desc: 'Kiểu giọt nước' },
+      { id: 'v2', name: 'Tròn',      code: 'ER000004B02', image: 'earring_v2', desc: 'Kiểu tròn cổ điển' },
     ],
     variants: [
-      { sku:'SS0ER000004A00A00PLWH1-----000', color:'Bạc',          size:0,  weight:'1.5g', stone:'Ngọc Trai', stock:64, price:320000, wholesalePrice:320000 },
-      { sku:'SY0ER000004A00A00PLWH1-----000', color:'Mạ Vàng',      size:0,  weight:'1.5g', stone:'Ngọc Trai', stock:45, price:360000, wholesalePrice:360000 },
-      { sku:'SR0ER000004A00A00PLWH1-----000', color:'Mạ Vàng Hồng', size:0,  weight:'1.5g', stone:'Ngọc Trai', stock:38, price:380000, wholesalePrice:380000 },
+      { sku:'SS0ER000004A00A00PLWH1-----00', color:'Bạc',          size:0,  weight:'1.5g', stone:'Ngọc Trai', stock:64, price:320000, wholesalePrice:320000 },
+      { sku:'SY0ER000004A00A00PLWH1-----00', color:'Mạ Vàng',      size:0,  weight:'1.5g', stone:'Ngọc Trai', stock:45, price:360000, wholesalePrice:360000 },
+      { sku:'SR0ER000004A00A00PLWH1-----00', color:'Mạ Vàng Hồng', size:0,  weight:'1.5g', stone:'Ngọc Trai', stock:38, price:380000, wholesalePrice:380000 },
     ],
   },
   {
@@ -134,31 +136,31 @@ const PRODUCTS = [
     image: 'pair_v1',
     specs: { group: 'Cặp nhẫn', purity: '925', material: 'Không', metal: 'Bạc 925', weight: '3.2-3.6g', materialId: 'bac', purityId: '925' },
     versions: [
-      { id: 'v1', name: 'Trơn Khắc Tên', image: 'pair_v1', desc: 'Nhẫn trơn khắc tên' },
-      { id: 'v2', name: 'Đính Đá', image: 'pair_v2', desc: 'Nhẫn đính đá CZ' },
+      { id: 'v1', name: 'Trơn Khắc Tên', code: 'RG000005B01', image: 'pair_v1', desc: 'Nhẫn trơn khắc tên' },
+      { id: 'v2', name: 'Đính Đá',       code: 'RG000005B02', image: 'pair_v2', desc: 'Nhẫn đính đá CZ' },
     ],
     variants: [
-      { sku:'SS0RG000005A00A00----------006', color:'Bạc',          size:6,  weight:'3.2g', stone:'Không',   stock:30, price:550000, wholesalePrice:522500 },
-      { sku:'SS0RG000005A00A00----------007', color:'Bạc',          size:7,  weight:'3.4g', stone:'Không',   stock:28, price:550000, wholesalePrice:522500 },
-      { sku:'SS0RG000005A00A00----------008', color:'Bạc',          size:8,  weight:'3.6g', stone:'Không',   stock:22, price:550000, wholesalePrice:522500 },
-      { sku:'SY0RG000005A00A00----------007', color:'Mạ Vàng',      size:7,  weight:'3.4g', stone:'Không',   stock:15, price:580000, wholesalePrice:551000 },
+      { sku:'SS0RG000005A00A00----------06', color:'Bạc',          size:6,  weight:'3.2g', stone:'Không',   stock:30, price:550000, wholesalePrice:522500 },
+      { sku:'SS0RG000005A00A00----------07', color:'Bạc',          size:7,  weight:'3.4g', stone:'Không',   stock:28, price:550000, wholesalePrice:522500 },
+      { sku:'SS0RG000005A00A00----------08', color:'Bạc',          size:8,  weight:'3.6g', stone:'Không',   stock:22, price:550000, wholesalePrice:522500 },
+      { sku:'SY0RG000005A00A00----------07', color:'Mạ Vàng',      size:7,  weight:'3.4g', stone:'Không',   stock:15, price:580000, wholesalePrice:551000 },
     ],
   },
   {
     id: 6, name: 'Mặt Dây Chuyền Bạc Hoa Sen',
-    drawingNo: 'PD000006A00',
+    drawingNo: 'PT000006A00',
     badge: 'MOQ thấp', category: 'mat-day', priceRange: '180.000đ – 220.000đ',
     image: 'pendant_v1',
     specs: { group: 'Mặt dây', purity: '925', material: 'Không', metal: 'Bạc 925', weight: '1.2g', materialId: 'bac', purityId: '925' },
     versions: [
-      { id: 'v1', name: 'Hoa Sen', image: 'pendant_v1', desc: 'Mặt hoa sen' },
-      { id: 'v2', name: 'Lá Bồ Đề', image: 'pendant_v2', desc: 'Mặt lá bồ đề' },
-      { id: 'v3', name: 'Chữ Phúc', image: 'pendant_v3', desc: 'Mặt chữ Phúc' },
+      { id: 'v1', name: 'Hoa Sen',  code: 'PT000006B01', image: 'pendant_v1', desc: 'Mặt hoa sen' },
+      { id: 'v2', name: 'Lá Bồ Đề', code: 'PT000006B02', image: 'pendant_v2', desc: 'Mặt lá bồ đề' },
+      { id: 'v3', name: 'Chữ Phúc', code: 'PT000006B03', image: 'pendant_v3', desc: 'Mặt chữ Phúc' },
     ],
     variants: [
-      { sku:'SS0PD000006A00A00----------000', color:'Bạc',          size:0,  weight:'1.2g', stone:'Không',    stock:80, price:180000, wholesalePrice:180000 },
-      { sku:'SY0PD000006A00A00----------000', color:'Mạ Vàng',      size:0,  weight:'1.2g', stone:'Không',    stock:60, price:200000, wholesalePrice:200000 },
-      { sku:'SR0PD000006A00A00----------000', color:'Mạ Vàng Hồng', size:0,  weight:'1.2g', stone:'Không',    stock:50, price:220000, wholesalePrice:220000 },
+      { sku:'SS0PT000006A00A00----------00', color:'Bạc',          size:0,  weight:'1.2g', stone:'Không',    stock:80, price:180000, wholesalePrice:180000 },
+      { sku:'SY0PT000006A00A00----------00', color:'Mạ Vàng',      size:0,  weight:'1.2g', stone:'Không',    stock:60, price:200000, wholesalePrice:200000 },
+      { sku:'SR0PT000006A00A00----------00', color:'Mạ Vàng Hồng', size:0,  weight:'1.2g', stone:'Không',    stock:50, price:220000, wholesalePrice:220000 },
     ],
   },
 ];
@@ -603,7 +605,12 @@ function addCartItem(productId, name, drawingNo, variantSku, color, size, qty, p
     const purId = prod?.specs?.purityId || selectedPurity?.id || '';
     const mat = MATERIALS.find(m => m.id === matId);
     const pur = PURITIES[matId]?.find(p => p.id === purId);
-    cart.push({ productId, name, drawingNo, variantSku, color, size, qty, price, materialId: matId, purityId: purId, materialName: mat?.name || '', materialIcon: mat?.icon || '🔩', purityTag: pur?.tag || '' });
+    cart.push({
+      productId, name, drawingNo, variantSku, color, size, qty, price,
+      materialId: matId, purityId: purId,
+      materialName: mat?.name || '', materialIcon: mat?.icon || '🔩', purityTag: pur?.tag || '',
+      orderMaterial: selectedMaterial?.name || mat?.name || '', orderPurity: selectedPurity?.tag || pur?.tag || '',
+    });
   }
 }
 
@@ -698,7 +705,73 @@ function selectCustomer(id) {
   activeOrderId = 1;
   orderSeq = 1;
   renderSubHeader();
-  openMaterialModal();
+  // Show approval then landing page
+  showCustomerApproval();
+}
+
+function showCustomerApproval() {
+  const overlay = document.createElement('div');
+  overlay.id = 'custApprovalOverlay';
+  overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:2000;display:flex;align-items:center;justify-content:center;animation:fadeIn .2s;';
+  overlay.innerHTML = `
+    <div style="background:white;border-radius:16px;padding:40px 48px;text-align:center;max-width:400px;width:90%;box-shadow:0 20px 60px rgba(0,0,0,.2);animation:slideUp .3s ease-out;">
+      <div id="custApprovalSpinner" style="margin:0 auto 20px;">
+        <svg width="56" height="56" viewBox="0 0 56 56" style="animation:spin 1s linear infinite;">
+          <circle cx="28" cy="28" r="24" fill="none" stroke="#E5E7EB" stroke-width="4"/>
+          <circle cx="28" cy="28" r="24" fill="none" stroke="#0052CC" stroke-width="4" stroke-dasharray="100 52" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div id="custApprovalIcon" style="display:none;font-size:48px;margin-bottom:16px;">✅</div>
+      <div id="custApprovalTitle" style="font-size:18px;font-weight:800;color:#111827;margin-bottom:8px;">Đang chờ duyệt...</div>
+      <div style="font-size:13px;color:#6B7280;line-height:1.6;">
+        Khách hàng: <strong>${selectedCustomer.name}</strong><br>
+        ${selectedCustomer.code} · ${selectedCustomer.type}
+      </div>
+      <div id="custApprovalStatus" style="margin-top:16px;font-size:12px;color:#9CA3AF;">Đang xác minh thông tin khách hàng...</div>
+    </div>
+  `;
+  document.body.appendChild(overlay);
+
+  setTimeout(() => {
+    document.getElementById('custApprovalStatus').textContent = 'Đang kiểm tra lịch sử đặt hàng...';
+  }, 800);
+
+  setTimeout(() => {
+    document.getElementById('custApprovalStatus').textContent = 'Đang xác nhận quyền truy cập...';
+  }, 1600);
+
+  setTimeout(() => {
+    document.getElementById('custApprovalSpinner').style.display = 'none';
+    document.getElementById('custApprovalIcon').style.display = '';
+    document.getElementById('custApprovalTitle').textContent = 'Đã được duyệt!';
+    document.getElementById('custApprovalTitle').style.color = '#059669';
+    document.getElementById('custApprovalStatus').innerHTML = '<span style="color:#059669;font-weight:600;">✓ Khách hàng đã được xác nhận</span>';
+  }, 2400);
+
+  setTimeout(() => {
+    overlay.remove();
+    // Show landing page with "choose material" CTA
+    renderProducts([]);
+    showMaterialLanding();
+  }, 3200);
+}
+
+function showMaterialLanding() {
+  const grid = document.getElementById('productsGrid');
+  grid.innerHTML = `
+    <div style="grid-column:1/-1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:100px 20px;color:#9CA3AF;gap:16px;">
+      <div style="width:80px;height:80px;border-radius:50%;background:#FFFBEB;display:flex;align-items:center;justify-content:center;font-size:36px;">🏷</div>
+      <div style="font-size:20px;font-weight:800;color:#111827;">Chào ${selectedCustomer?.name || ''}!</div>
+      <div style="font-size:14px;color:#6B7280;max-width:400px;text-align:center;line-height:1.6;">Vui lòng chọn nguyên liệu và tuổi vàng để bắt đầu tạo đơn đặt hàng</div>
+      <div style="display:flex;gap:12px;margin-top:12px;">
+        ${MATERIALS.map(m => `
+          <button onclick="openMaterialModal()" style="display:flex;flex-direction:column;align-items:center;gap:8px;padding:20px 32px;background:white;border:2px solid ${m.border};border-radius:14px;cursor:pointer;transition:all .2s;min-width:140px;" onmouseover="this.style.borderColor='#0052CC';this.style.transform='translateY(-2px)';this.style.boxShadow='0 4px 12px rgba(0,0,0,.1)'" onmouseout="this.style.borderColor='${m.border}';this.style.transform='none';this.style.boxShadow='none'">
+            <span style="font-size:40px;">${m.icon}</span>
+            <span style="font-size:15px;font-weight:700;color:#111827;">${m.name}</span>
+            <span style="font-size:11px;color:#6B7280;">${m.desc}</span>
+          </button>`).join('')}
+      </div>
+    </div>`;
 }
 
 // ═══════════════════════════════════════════════════
@@ -771,58 +844,10 @@ function selectPurity(id) {
   selectedPurity = PURITIES[selectedMaterial.id].find(p => p.id === id);
   saveOrderState();
   closeMaterialModal();
-  showApprovalModal();
-}
-
-function showApprovalModal() {
-  // Create overlay
-  const overlay = document.createElement('div');
-  overlay.id = 'approvalOverlay';
-  overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:2000;display:flex;align-items:center;justify-content:center;animation:fadeIn .2s;';
-
-  overlay.innerHTML = `
-    <div style="background:white;border-radius:16px;padding:40px 48px;text-align:center;max-width:400px;width:90%;box-shadow:0 20px 60px rgba(0,0,0,.2);animation:slideUp .3s ease-out;">
-      <div id="approvalSpinner" style="margin:0 auto 20px;">
-        <svg width="56" height="56" viewBox="0 0 56 56" style="animation:spin 1s linear infinite;">
-          <circle cx="28" cy="28" r="24" fill="none" stroke="#E5E7EB" stroke-width="4"/>
-          <circle cx="28" cy="28" r="24" fill="none" stroke="#0052CC" stroke-width="4" stroke-dasharray="100 52" stroke-linecap="round"/>
-        </svg>
-      </div>
-      <div id="approvalIcon" style="display:none;font-size:48px;margin-bottom:16px;">✅</div>
-      <div id="approvalTitle" style="font-size:18px;font-weight:800;color:#111827;margin-bottom:8px;">Đang chờ duyệt...</div>
-      <div id="approvalDesc" style="font-size:13px;color:#6B7280;line-height:1.6;">
-        ${selectedCustomer?.name || ''}<br>
-        ${selectedMaterial?.icon || ''} ${selectedMaterial?.name || ''} · ${selectedPurity?.tag || ''}
-      </div>
-      <div id="approvalStatus" style="margin-top:16px;font-size:12px;color:#9CA3AF;">Đang xác minh thông tin đơn hàng...</div>
-    </div>
-  `;
-  document.body.appendChild(overlay);
-
-  // Simulate approval steps
-  setTimeout(() => {
-    document.getElementById('approvalStatus').textContent = 'Đang kiểm tra quyền đặt hàng...';
-  }, 800);
-
-  setTimeout(() => {
-    document.getElementById('approvalStatus').textContent = 'Đang xác nhận với hệ thống...';
-  }, 1600);
-
-  setTimeout(() => {
-    // Approved!
-    document.getElementById('approvalSpinner').style.display = 'none';
-    document.getElementById('approvalIcon').style.display = '';
-    document.getElementById('approvalTitle').textContent = 'Đã được duyệt!';
-    document.getElementById('approvalTitle').style.color = '#059669';
-    document.getElementById('approvalStatus').innerHTML = '<span style="color:#059669;font-weight:600;">✓ Bạn có thể bắt đầu đặt hàng</span>';
-  }, 2400);
-
-  setTimeout(() => {
-    overlay.remove();
-    renderSubHeader();
-    renderCartSidebar();
-    renderProducts(getFilteredProducts());
-  }, 3200);
+  renderSubHeader();
+  renderCartSidebar();
+  renderProducts(getFilteredProducts());
+  showNotification(`✓ ${selectedMaterial.name} · ${selectedPurity.name}`);
 }
 
 // CSS for approval modal
@@ -984,6 +1009,7 @@ function renderRetailPanel() {
             </div>
             <div>
               <div style="font-size:12px;font-weight:700;color:${pmActiveVersion?.id===v.id?'#0052CC':'#374151'};">${v.name}</div>
+              ${v.code ? `<div style="font-size:9px;color:#9CA3AF;font-family:monospace;">${v.code}</div>` : ''}
               <div style="font-size:10px;color:#9CA3AF;">${v.desc}</div>
             </div>
           </div>`).join('')}
@@ -1305,12 +1331,25 @@ function closeCartSidebar() {
 }
 
 function renderCartSidebar() {
-  document.getElementById('csTitle').textContent = `Đặt hàng ${activeOrderId}`;
+  const o = getActiveOrder();
+  const orderIdx = orders.indexOf(o) + 1;
+  const matLabel = selectedMaterial ? `${selectedMaterial.icon} ${selectedMaterial.name}` : '';
+  const purLabel = selectedPurity ? selectedPurity.tag : '';
+
+  document.getElementById('csTitle').textContent = o?.customName || `Đặt hàng ${orderIdx}`;
   document.getElementById('csBadge').textContent = cart.length;
 
-  // Customer
+  // Customer + Material/Purity info
   const custArea = document.getElementById('csCustomerArea');
-  custArea.innerHTML = selectedCustomer
+  const matPurBadge = matLabel ? `
+    <div style="margin:0 12px 8px;padding:8px 12px;background:#FFFBEB;border:1px solid #FCD34D;border-radius:8px;display:flex;align-items:center;gap:8px;">
+      <span style="font-size:14px;">${selectedMaterial?.icon || ''}</span>
+      <div style="flex:1;">
+        <div style="font-size:12px;font-weight:700;color:#92400E;">${selectedMaterial?.name || ''}${purLabel ? ' · ' + purLabel : ''}</div>
+      </div>
+    </div>` : '';
+
+  custArea.innerHTML = (selectedCustomer
     ? `<div class="cs-customer">
         <div class="cs-customer-avatar">${selectedCustomer.name.charAt(0)}</div>
         <div class="cs-customer-info">
@@ -1319,7 +1358,8 @@ function renderCartSidebar() {
         </div>
         ${selectedCustomer.discount ? `<div class="cs-discount-badge">${selectedCustomer.discount}%</div>` : ''}
       </div>`
-    : `<div class="cs-no-customer" onclick="openCustomerModal()">👤 + Chọn khách hàng</div>`;
+    : `<div class="cs-no-customer" onclick="openCustomerModal()">👤 + Chọn khách hàng</div>`)
+    + matPurBadge;
 
   // Products (grouped by productId)
   const productsEl = document.getElementById('csProducts');
@@ -1367,9 +1407,12 @@ function renderCartSidebar() {
         const oQty = o.cart.reduce((s, i) => s + i.qty, 0);
         const matIcon = o.material?.icon || '';
         const purTag = o.purity?.tag || '';
-        return `<div style="display:flex;justify-content:space-between;font-size:12px;color:#374151;padding:2px 0;">
-          <span>${o.id === activeOrderId ? '→ ' : ''}Đặt hàng ${o.id} ${matIcon}${purTag}</span>
-          <span>${oQty} sp · ${fmt(oTotal)}</span>
+        const oIdx = orders.indexOf(o) + 1;
+        const oLabel = o.customName || `Đặt hàng ${oIdx}`;
+        const matName = o.material?.name || '';
+        return `<div style="display:flex;justify-content:space-between;align-items:center;font-size:12px;color:#374151;padding:3px 0;">
+          <span>${o.id === activeOrderId ? '→ ' : ''}${oLabel} <span style="font-size:10px;color:#9CA3AF;">${matIcon} ${matName}${purTag ? ' · '+purTag : ''}</span></span>
+          <span style="font-weight:600;">${oQty} sp · ${fmt(oTotal)}</span>
         </div>`;
       }).join('')}
       <div style="display:flex;justify-content:space-between;font-size:13px;font-weight:700;color:#0052CC;padding-top:6px;margin-top:6px;border-top:1px solid #BFDBFE;">

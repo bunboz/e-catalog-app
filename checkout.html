@@ -568,17 +568,21 @@ function init() {
         });
       });
     } else if (d.cart) {
-      cartItems = d.cart;
+      cartItems = d.cart.map(item => ({
+        ...item,
+        orderMaterial: item.orderMaterial || item.materialName || '',
+        orderPurity: item.orderPurity || item.purityTag || '',
+        materialIcon: item.materialIcon || '🔩',
+        materialId: item.materialId || 'bac',
+      }));
     }
   } else {
     // Demo data
     customer = { name: 'Anh Hoàng – Sài Gòn', code: 'KH-00024', phone: '0901 234 567' };
     cartItems = [
-      { variantSku:'RG-CZ-001-S6-W', productId:1, name:'Nhẫn Bạc Nữ Đính Đá CZ Hoa Cổ', sku:'RG-CZ-001', color:'Bạc', size:6, qty:5, price:450000 },
-      { variantSku:'RG-CZ-001-S7-B', productId:1, name:'Nhẫn Bạc Nữ Đính Đá CZ Hoa Cổ', sku:'RG-CZ-001', color:'Mạ Vàng', size:7, qty:10, price:480000 },
-      { variantSku:'RG-CZ-001-S7-R', productId:1, name:'Nhẫn Bạc Nữ Đính Đá CZ Hoa Cổ', sku:'RG-CZ-001', color:'Mạ Vàng Hồng', size:7, qty:18, price:490000 },
-      { variantSku:'LT-18K-002-14-V', productId:2, name:'Lắc Tay Vàng 18K Charm Đính Đá', sku:'LT-18K-002', color:'Vàng 18K', size:14, qty:20, price:2650000 },
-      { variantSku:'LT-18K-002-15-V', productId:2, name:'Lắc Tay Vàng 18K Charm Đính Đá', sku:'LT-18K-002', color:'Vàng 18K', size:15, qty:15, price:2750000 },
+      { variantSku:'SS0RG000001A00A00CZWH1-----09', productId:1, name:'Nhẫn Bạc Nữ Đính Đá CZ Hoa Cổ', drawingNo:'RG000001A00', color:'Bạc', size:9, qty:5, price:450000, orderMaterial:'Bạc', orderPurity:'925', materialIcon:'🥈', materialId:'bac' },
+      { variantSku:'SY0RG000001A00A00CZWH1-----07', productId:1, name:'Nhẫn Bạc Nữ Đính Đá CZ Hoa Cổ', drawingNo:'RG000001A00', color:'Mạ Vàng', size:7, qty:10, price:480000, orderMaterial:'Bạc', orderPurity:'925', materialIcon:'🥈', materialId:'bac' },
+      { variantSku:'GY0NE000003A00A00RBRD1-----45', productId:3, name:'Dây Chuyền Vàng 18K Mặt Bướm', drawingNo:'NE000003A00', color:'Vàng 18K', size:45, qty:8, price:3600000, orderMaterial:'Vàng', orderPurity:'18K', materialIcon:'🥇', materialId:'vang' },
     ];
   }
 
@@ -930,6 +934,18 @@ function confirmOrder() {
           <div style="font-size:14px;font-weight:600;color:#374151;margin-top:2px;">📞 ${customer.phone}</div>
         </div>` : ''}
         <div>
+          <div style="font-size:11px;color:#9CA3AF;text-transform:uppercase;letter-spacing:.5px;font-weight:600;">Nguyên liệu · Tuổi</div>
+          <div style="display:flex;gap:4px;margin-top:4px;flex-wrap:wrap;">
+            ${(() => {
+              const matGroups = groupItemsByMaterial(cartItems);
+              return matGroups.map(g => {
+                const gc = GROUP_COLORS[g.materialId] || GROUP_COLORS['bac'];
+                return `<span style="display:inline-flex;align-items:center;gap:3px;background:${gc.bg};border:1px solid ${gc.border};border-radius:6px;padding:2px 8px;font-size:11px;font-weight:700;color:${gc.text};">${g.icon} ${g.material}${g.purity ? ' · '+g.purity : ''}</span>`;
+              }).join('');
+            })()}
+          </div>
+        </div>
+        <div>
           <div style="font-size:11px;color:#9CA3AF;text-transform:uppercase;letter-spacing:.5px;font-weight:600;">Số đợt giao</div>
           <div style="font-size:14px;font-weight:700;color:#0052CC;margin-top:2px;">${batches.length} đợt</div>
         </div>
@@ -1069,7 +1085,7 @@ function finalizeOrder(orderNum) {
         <div style="max-width:900px;margin:0 auto;">
 
           <!-- Order summary cards -->
-          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px;">
+          <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:20px;">
             <div style="background:white;border-radius:10px;padding:14px 18px;border:1px solid #E5E7EB;">
               <div style="font-size:11px;color:#9CA3AF;text-transform:uppercase;letter-spacing:.4px;font-weight:600;">Mã đơn</div>
               <div style="font-size:16px;font-weight:800;color:#0052CC;margin-top:4px;">${orderNum}</div>
@@ -1077,6 +1093,18 @@ function finalizeOrder(orderNum) {
             <div style="background:white;border-radius:10px;padding:14px 18px;border:1px solid #E5E7EB;">
               <div style="font-size:11px;color:#9CA3AF;text-transform:uppercase;letter-spacing:.4px;font-weight:600;">Trạng thái</div>
               <div style="margin-top:6px;">${statusBadge}</div>
+            </div>
+            <div style="background:white;border-radius:10px;padding:14px 18px;border:1px solid #E5E7EB;">
+              <div style="font-size:11px;color:#9CA3AF;text-transform:uppercase;letter-spacing:.4px;font-weight:600;">Nguyên liệu · Tuổi</div>
+              <div style="display:flex;gap:4px;margin-top:6px;flex-wrap:wrap;">
+                ${(() => {
+                  const mg = groupItemsByMaterial(cartItems);
+                  return mg.map(g => {
+                    const gc = GROUP_COLORS[g.materialId] || GROUP_COLORS['bac'];
+                    return `<span style="display:inline-flex;align-items:center;gap:3px;background:${gc.bg};border:1px solid ${gc.border};border-radius:6px;padding:2px 8px;font-size:11px;font-weight:700;color:${gc.text};">${g.icon} ${g.material}${g.purity ? ' · '+g.purity : ''}</span>`;
+                  }).join('');
+                })()}
+              </div>
             </div>
             <div style="background:white;border-radius:10px;padding:14px 18px;border:1px solid #E5E7EB;">
               <div style="font-size:11px;color:#9CA3AF;text-transform:uppercase;letter-spacing:.4px;font-weight:600;">Sản phẩm</div>

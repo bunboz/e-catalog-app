@@ -971,6 +971,7 @@ function openMaterialModal() {
   document.getElementById('materialCloseBtn').style.display = isEdit ? '' : 'none';
   document.getElementById('materialStepLabel').textContent = isEdit ? 'Thay đổi nguyên liệu' : 'Chọn nguyên liệu';
   renderMaterialOptions();
+  showStep('stepMaterial');
   document.getElementById('materialModal').classList.add('active');
 }
 

@@ -32,52 +32,12 @@ const CUSTOMER_REQUIREMENTS = [
 ];
 
 const MATERIALS = [
-  { id: 'bac',      name: 'Bạc',       icon: '🥈', desc: 'Bạc nguyên chất và hợp kim bạc',      color: '#C0C0C0', bg: '#F5F5F5', border: '#A0A0A0' },
-  { id: 'vang',     name: 'Vàng',      icon: '🥇', desc: 'Vàng nguyên chất và hợp kim vàng',    color: '#FFB800', bg: '#FFF8E1', border: '#D49000' },
-  { id: 'bachkim',  name: 'Bạch Kim',  icon: '💎', desc: 'Platinum · Quý hiếm, bền vĩnh viễn',  color: '#E8E8E8', bg: '#FAFAFA', border: '#BDBDBD' },
-  { id: 'titan',    name: 'Titan',     icon: '⚙️', desc: 'Titanium · Siêu nhẹ, chống dị ứng',   color: '#78909C', bg: '#ECEFF1', border: '#90A4AE' },
-  { id: 'thepkhongri', name: 'Thép',   icon: '🔩', desc: 'Stainless Steel · Bền, giá tốt',      color: '#607D8B', bg: '#ECEFF1', border: '#78909C' },
-  { id: 'dongthau', name: 'Đồng thau', icon: '🔔', desc: 'Brass · Màu vàng cổ điển',            color: '#CD7F32', bg: '#FFF3E0', border: '#BF8040' },
+  { id: 'bac',      name: 'Bạc',      icon: '🥈', desc: 'Bạc 925 · Tinh tế, bền màu',     color: '#C0C0C0', bg: '#F5F5F5', border: '#A0A0A0' },
+  { id: 'vang',     name: 'Vàng',     icon: '🥇', desc: 'Vàng 18K · Sang trọng, phổ biến', color: '#FFB800', bg: '#FFF8E1', border: '#D49000' },
+  { id: 'bachkim',  name: 'Bạch Kim', icon: '💎', desc: 'Platinum · Quý hiếm, cao cấp',    color: '#E8E8E8', bg: '#FAFAFA', border: '#BDBDBD' },
+  { id: 'kimcuong', name: 'Kim Cương',icon: '💠', desc: 'Diamond · Đỉnh cao xa xỉ',        color: '#A5F3FC', bg: '#ECFEFF', border: '#67E8F9' },
 ];
 
-const PURITIES = {
-  'bac': [
-    { id: '800', name: 'Bạc 800', desc: '80% bạc · Hợp kim cứng', tag: '800' },
-    { id: '925', name: 'Bạc 925', desc: 'Sterling Silver · 92.5% bạc', tag: '925' },
-    { id: '950', name: 'Bạc 950', desc: 'Britannia Silver · 95% bạc', tag: '950' },
-    { id: '999', name: 'Bạc 999', desc: 'Fine Silver · 99.9% bạc nguyên chất', tag: '999' },
-  ],
-  'vang': [
-    { id: '8k',  name: 'Vàng 8K',  desc: '33.3% vàng · Tiết kiệm', tag: '8K' },
-    { id: '10k', name: 'Vàng 10K', desc: '41.7% vàng · Phù hợp ngân sách', tag: '10K' },
-    { id: '14k', name: 'Vàng 14K', desc: '58.3% vàng · Độ bền cao', tag: '14K' },
-    { id: '18k', name: 'Vàng 18K', desc: '75% vàng · Phổ biến nhất', tag: '18K' },
-    { id: '22k', name: 'Vàng 22K', desc: '91.6% vàng · Gần nguyên chất', tag: '22K' },
-    { id: '24k', name: 'Vàng 24K', desc: '99.9% vàng nguyên chất', tag: '24K' },
-  ],
-  'bachkim': [
-    { id: '850pt', name: 'Pt850', desc: '85% platinum', tag: 'Pt850' },
-    { id: '900pt', name: 'Pt900', desc: '90% platinum', tag: 'Pt900' },
-    { id: '950pt', name: 'Pt950', desc: '95% platinum · Phổ biến nhất', tag: 'Pt950' },
-    { id: '999pt', name: 'Pt999', desc: '99.9% platinum nguyên chất', tag: 'Pt999' },
-  ],
-  'titan': [
-    { id: 'gr1', name: 'Grade 1', desc: 'CP Titanium · Nguyên chất nhất', tag: 'Gr1' },
-    { id: 'gr2', name: 'Grade 2', desc: 'CP Titanium · Phổ biến nhất', tag: 'Gr2' },
-    { id: 'gr5', name: 'Grade 5', desc: 'Ti-6Al-4V · Siêu bền', tag: 'Gr5' },
-    { id: 'gr23', name: 'Grade 23', desc: 'Ti-6Al-4V ELI · Y tế', tag: 'Gr23' },
-  ],
-  'thepkhongri': [
-    { id: '304', name: 'Thép 304', desc: '18/8 · Phổ biến nhất', tag: '304' },
-    { id: '316', name: 'Thép 316', desc: 'Marine Grade · Chống ăn mòn cao', tag: '316' },
-    { id: '316l', name: 'Thép 316L', desc: 'Low Carbon · Trang sức cao cấp', tag: '316L' },
-  ],
-  'dongthau': [
-    { id: 'c260', name: 'Brass C260', desc: 'Cartridge Brass · 70% đồng', tag: 'C260' },
-    { id: 'c360', name: 'Brass C360', desc: 'Free Cutting · Dễ gia công', tag: 'C360' },
-    { id: 'c230', name: 'Red Brass', desc: '85% đồng · Màu đỏ hồng', tag: 'C230' },
-  ],
-};
 
 // Chủng loại: Vòng tay=BE, Nhẫn=RG, Dây chuyền=NE, Bông tai=ER, Mặt dây nữ=PT
 // SPU (DrawingNo): {chủng loại 2}{số 6}{A00}                    → BT000001A00
@@ -96,14 +56,16 @@ const PRODUCTS = [
       { id: 'v3', name: 'Đơn Giản',     code: 'RG000001B03', image: 'ring_v3', desc: 'Kiểu trơn tối giản' },
     ],
     variants: [
-      { sku:'SS0RG000001A00A00CZWH1-----06', color:'Bạc',          size:6,  weight:'2.1g', stone:'CZ Trắng', stock:42, price:450000, wholesalePrice:450000 },
-      { sku:'SS0RG000001A00A00CZWH1-----07', color:'Bạc',          size:7,  weight:'2.2g', stone:'CZ Trắng', stock:38, price:450000, wholesalePrice:450000 },
-      { sku:'SS0RG000001A00A00CZWH1-----08', color:'Bạc',          size:8,  weight:'2.3g', stone:'CZ Trắng', stock:30, price:450000, wholesalePrice:450000 },
-      { sku:'SS0RG000001A00A00CZWH1-----09', color:'Bạc',          size:9,  weight:'2.4g', stone:'CZ Trắng', stock:15, price:450000, wholesalePrice:450000 },
-      { sku:'SY0RG000001A00A00CZWH1-----07', color:'Mạ Vàng',      size:7,  weight:'2.2g', stone:'CZ Trắng', stock:25, price:480000, wholesalePrice:480000 },
-      { sku:'SY0RG000001A00A00CZWH1-----08', color:'Mạ Vàng',      size:8,  weight:'2.3g', stone:'CZ Trắng', stock:20, price:480000, wholesalePrice:480000 },
-      { sku:'SR0RG000001A00A00CZRO1-----07', color:'Mạ Vàng Hồng', size:7,  weight:'2.2g', stone:'CZ Hồng',  stock:18, price:490000, wholesalePrice:490000 },
-      { sku:'SR0RG000001A00A00CZRO1-----08', color:'Mạ Vàng Hồng', size:8,  weight:'2.3g', stone:'CZ Hồng',  stock:12, price:490000, wholesalePrice:490000 },
+      { sku:'SS0RG000001A00A00CZWH1-----06', color:'Bạc',          size:6,  weight:'2.1g', stone:'Trắng', stock:42, price:450000, wholesalePrice:450000 },
+      { sku:'SS0RG000001A00A00CZWH1-----07', color:'Bạc',          size:7,  weight:'2.2g', stone:'Trắng', stock:38, price:450000, wholesalePrice:450000 },
+      { sku:'SS0RG000001A00A00CZWH1-----08', color:'Bạc',          size:8,  weight:'2.3g', stone:'Trắng', stock:30, price:450000, wholesalePrice:450000 },
+      { sku:'SS0RG000001A00A00CZWH1-----09', color:'Bạc',          size:9,  weight:'2.4g', stone:'Trắng', stock:15, price:450000, wholesalePrice:450000 },
+      { sku:'SY0RG000001A00A00CZWH1-----07', color:'Mạ Vàng',      size:7,  weight:'2.2g', stone:'Trắng', stock:25, price:480000, wholesalePrice:480000 },
+      { sku:'SY0RG000001A00A00CZWH1-----08', color:'Mạ Vàng',      size:8,  weight:'2.3g', stone:'Trắng', stock:20, price:480000, wholesalePrice:480000 },
+      { sku:'SR0RG000001A00A00CZRO1-----07', color:'Mạ Vàng Hồng', size:7,  weight:'2.2g', stone:'Hồng',  stock:18, price:490000, wholesalePrice:490000 },
+      { sku:'SR0RG000001A00A00CZRO1-----08', color:'Mạ Vàng Hồng', size:8,  weight:'2.3g', stone:'Hồng',  stock:12, price:490000, wholesalePrice:490000 },
+      { sku:'SY0RG000001A00A00CZYE1-----07', color:'Mạ Vàng',      size:7,  weight:'2.2g', stone:'Vàng',  stock:14, price:470000, wholesalePrice:470000 },
+      { sku:'SY0RG000001A00A00CZTM1-----07', color:'Mạ Vàng',     size:7,  weight:'2.2g', stone:'Tím',   stock:10, price:475000, wholesalePrice:475000 },
     ],
   },
   {
@@ -119,11 +81,13 @@ const PRODUCTS = [
         photos: { 'Vàng 18K': 'images/ghe&caphe/vang.png', 'Vàng Trắng': 'images/ghe&caphe/do.png' } },
     ],
     variants: [
-      { sku:'GY0BE000002A00A00CZGO1DI00114', color:'Vàng 18K',    size:14, weight:'3.8g', stone:'Đá CZ',    stock:56, price:2650000, wholesalePrice:2517500 },
-      { sku:'GY0BE000002A00A00CZGO1DI00115', color:'Vàng 18K',    size:15, weight:'4.0g', stone:'Đá CZ',    stock:34, price:2750000, wholesalePrice:2612500 },
-      { sku:'GY0BE000002A00A00CZGO1DI00116', color:'Vàng 18K',    size:16, weight:'4.2g', stone:'Đá CZ',    stock:20, price:2900000, wholesalePrice:2755000 },
-      { sku:'GW0BE000002A00A00DI001CZGO114', color:'Vàng Trắng',  size:14, weight:'3.8g', stone:'Kim cương', stock:12, price:3000000, wholesalePrice:2850000 },
-      { sku:'GW0BE000002A00A00DI001CZGO115', color:'Vàng Trắng',  size:15, weight:'4.0g', stone:'Kim cương', stock:8,  price:3200000, wholesalePrice:3040000 },
+      { sku:'GY0BE000002A00A00CZGO1DI00114', color:'Vàng 18K',    size:14, weight:'3.8g', stone:'Xanh',  stock:56, price:2650000, wholesalePrice:2517500 },
+      { sku:'GY0BE000002A00A00CZGO1DI00115', color:'Vàng 18K',    size:15, weight:'4.0g', stone:'Xanh',  stock:34, price:2750000, wholesalePrice:2612500 },
+      { sku:'GY0BE000002A00A00CZGO1DI00116', color:'Vàng 18K',    size:16, weight:'4.2g', stone:'Xanh',  stock:20, price:2900000, wholesalePrice:2755000 },
+      { sku:'GY0BE000002A00A00CZTM1DI00114', color:'Vàng 18K',    size:14, weight:'3.8g', stone:'Tím',   stock:18, price:2700000, wholesalePrice:2565000 },
+      { sku:'GY0BE000002A00A00CZTM1DI00115', color:'Vàng 18K',    size:15, weight:'4.0g', stone:'Tím',   stock:12, price:2800000, wholesalePrice:2660000 },
+      { sku:'GW0BE000002A00A00DI001CZGO114', color:'Vàng Trắng',  size:14, weight:'3.8g', stone:'Trắng', stock:12, price:3000000, wholesalePrice:2850000 },
+      { sku:'GW0BE000002A00A00DI001CZGO115', color:'Vàng Trắng',  size:15, weight:'4.0g', stone:'Trắng', stock:8,  price:3200000, wholesalePrice:3040000 },
     ],
   },
   {
@@ -137,10 +101,10 @@ const PRODUCTS = [
       { id: 'v2', name: 'Mặt Hoa',  code: 'NE000003B02', image: 'chain_v2', desc: 'Mặt dây hình hoa' },
     ],
     variants: [
-      { sku:'GY0NE000003A00A00RBRD1-----40', color:'Vàng 18K',    size:40, weight:'5.1g', stone:'Đá Ruby',  stock:22, price:3200000, wholesalePrice:3040000 },
-      { sku:'GY0NE000003A00A00RBRD1-----42', color:'Vàng 18K',    size:42, weight:'5.3g', stone:'Đá Ruby',  stock:18, price:3350000, wholesalePrice:3182500 },
-      { sku:'GY0NE000003A00A00RBRD1-----45', color:'Vàng 18K',    size:45, weight:'5.6g', stone:'Đá Ruby',  stock:10, price:3600000, wholesalePrice:3420000 },
-      { sku:'GW0NE000003A00A00RBRD1-----40', color:'Vàng Trắng',  size:40, weight:'5.1g', stone:'Đá Ruby',  stock:14, price:3400000, wholesalePrice:3230000 },
+      { sku:'GY0NE000003A00A00RBRD1-----40', color:'Vàng 18K',    size:40, weight:'5.1g', stone:'Đỏ',  stock:22, price:3200000, wholesalePrice:3040000 },
+      { sku:'GY0NE000003A00A00RBRD1-----42', color:'Vàng 18K',    size:42, weight:'5.3g', stone:'Đỏ',  stock:18, price:3350000, wholesalePrice:3182500 },
+      { sku:'GY0NE000003A00A00RBRD1-----45', color:'Vàng 18K',    size:45, weight:'5.6g', stone:'Đỏ',  stock:10, price:3600000, wholesalePrice:3420000 },
+      { sku:'GW0NE000003A00A00RBRD1-----40', color:'Vàng Trắng',  size:40, weight:'5.1g', stone:'Đỏ',  stock:14, price:3400000, wholesalePrice:3230000 },
     ],
   },
   {
@@ -154,9 +118,9 @@ const PRODUCTS = [
       { id: 'v2', name: 'Tròn',      code: 'ER000004B02', image: 'earring_v2', desc: 'Kiểu tròn cổ điển' },
     ],
     variants: [
-      { sku:'SS0ER000004A00A00PLWH1-----00', color:'Bạc',          size:0,  weight:'1.5g', stone:'Ngọc Trai', stock:64, price:320000, wholesalePrice:320000 },
-      { sku:'SY0ER000004A00A00PLWH1-----00', color:'Mạ Vàng',      size:0,  weight:'1.5g', stone:'Ngọc Trai', stock:45, price:360000, wholesalePrice:360000 },
-      { sku:'SR0ER000004A00A00PLWH1-----00', color:'Mạ Vàng Hồng', size:0,  weight:'1.5g', stone:'Ngọc Trai', stock:38, price:380000, wholesalePrice:380000 },
+      { sku:'SS0ER000004A00A00PLWH1-----00', color:'Bạc',          size:0,  weight:'1.5g', stone:'Trắng Ngọc', stock:64, price:320000, wholesalePrice:320000 },
+      { sku:'SY0ER000004A00A00PLWH1-----00', color:'Mạ Vàng',      size:0,  weight:'1.5g', stone:'Trắng Ngọc', stock:45, price:360000, wholesalePrice:360000 },
+      { sku:'SR0ER000004A00A00PLWH1-----00', color:'Mạ Vàng Hồng', size:0,  weight:'1.5g', stone:'Trắng Ngọc', stock:38, price:380000, wholesalePrice:380000 },
     ],
   },
   {
@@ -193,6 +157,153 @@ const PRODUCTS = [
       { sku:'SR0PT000006A00A00----------00', color:'Mạ Vàng Hồng', size:0,  weight:'1.2g', stone:'Không',    stock:50, price:220000, wholesalePrice:220000 },
     ],
   },
+  // ── VÀNG ──────────────────────────────────────────
+  {
+    id: 7, name: 'Nhẫn Vàng 18K Đính Đá Ruby',
+    drawingNo: 'RG000007A00',
+    badge: 'Bán chạy', category: 'nhan', priceRange: '3.800.000đ – 4.200.000đ',
+    image: 'ring_v1',
+    specs: { group: 'Nhẫn', metal: 'Vàng 18K', weight: '2.8-3.2g', materialId: 'vang' },
+    versions: [
+      { id: 'v1', name: 'Ổ Đơn', code: 'RG000007B01', image: 'ring_v1', desc: 'Một viên ruby trung tâm' },
+      { id: 'v2', name: 'Hoa 5 Cánh', code: 'RG000007B02', image: 'ring_v2', desc: 'Năm viên tạo hình hoa' },
+    ],
+    variants: [
+      { sku:'GY0RG000007A00A00RBRD1-----06', color:'Vàng 18K',   size:6,  weight:'2.8g', stone:'Đỏ', stock:20, price:3800000, wholesalePrice:3610000 },
+      { sku:'GY0RG000007A00A00RBRD1-----07', color:'Vàng 18K',   size:7,  weight:'3.0g', stone:'Đỏ', stock:18, price:4000000, wholesalePrice:3800000 },
+      { sku:'GY0RG000007A00A00RBRD1-----08', color:'Vàng 18K',   size:8,  weight:'3.2g', stone:'Đỏ', stock:12, price:4200000, wholesalePrice:3990000 },
+      { sku:'GW0RG000007A00A00RBRD1-----07', color:'Vàng Trắng', size:7,  weight:'3.0g', stone:'Đỏ', stock:10, price:4100000, wholesalePrice:3895000 },
+    ],
+  },
+  {
+    id: 8, name: 'Bông Tai Vàng 18K Ngọc Trai',
+    drawingNo: 'ER000008A00',
+    badge: 'Mới', category: 'bong-tai', priceRange: '2.200.000đ – 2.600.000đ',
+    image: 'earring_v1',
+    specs: { group: 'Bông tai', metal: 'Vàng 18K', weight: '2.0g', materialId: 'vang' },
+    versions: [
+      { id: 'v1', name: 'Tròn Classic', code: 'ER000008B01', image: 'earring_v1', desc: 'Ngọc trai tròn cổ điển' },
+      { id: 'v2', name: 'Giọt Nước',   code: 'ER000008B02', image: 'earring_v2', desc: 'Ngọc trai giọt nước' },
+    ],
+    variants: [
+      { sku:'GY0ER000008A00A00PLWH1-----00', color:'Vàng 18K',   size:0, weight:'2.0g', stone:'Trắng Ngọc', stock:35, price:2200000, wholesalePrice:2090000 },
+      { sku:'GW0ER000008A00A00PLWH1-----00', color:'Vàng Trắng', size:0, weight:'2.0g', stone:'Trắng Ngọc', stock:20, price:2600000, wholesalePrice:2470000 },
+    ],
+  },
+  {
+    id: 9, name: 'Vòng Tay Vàng 18K Trơn',
+    drawingNo: 'BE000009A00',
+    badge: 'Có sẵn', category: 'vong-tay', priceRange: '5.500.000đ – 6.200.000đ',
+    image: 'bracelet_v1',
+    specs: { group: 'Vòng tay', metal: 'Vàng 18K', weight: '6.0-7.0g', materialId: 'vang' },
+    versions: [
+      { id: 'v1', name: 'Trơn Bóng',  code: 'BE000009B01', image: 'bracelet_v1', desc: 'Mặt bóng gương' },
+      { id: 'v2', name: 'Xước Nhám',  code: 'BE000009B02', image: 'bracelet_v2', desc: 'Mặt xước chống trầy' },
+    ],
+    variants: [
+      { sku:'GY0BE000009A00A00----------14', color:'Vàng 18K',   size:14, weight:'6.0g', stone:'Không', stock:25, price:5500000, wholesalePrice:5225000 },
+      { sku:'GY0BE000009A00A00----------16', color:'Vàng 18K',   size:16, weight:'7.0g', stone:'Không', stock:18, price:6200000, wholesalePrice:5890000 },
+      { sku:'GW0BE000009A00A00----------14', color:'Vàng Trắng', size:14, weight:'6.0g', stone:'Không', stock:12, price:5800000, wholesalePrice:5510000 },
+    ],
+  },
+  // ── BẠCH KIM ──────────────────────────────────────
+  {
+    id: 10, name: 'Nhẫn Bạch Kim Đính CZ',
+    drawingNo: 'RG000010A00',
+    badge: 'Mới', category: 'nhan', priceRange: '8.500.000đ – 9.500.000đ',
+    image: 'ring_v2',
+    specs: { group: 'Nhẫn', metal: 'Bạch Kim Pt950', weight: '4.0-4.5g', materialId: 'bachkim' },
+    versions: [
+      { id: 'v1', name: 'Ổ Pavé',  code: 'RG000010B01', image: 'ring_v2', desc: 'Đá pavé quanh ổ' },
+      { id: 'v2', name: 'Halo',    code: 'RG000010B02', image: 'ring_v1', desc: 'Viên lớn + halo' },
+    ],
+    variants: [
+      { sku:'PT0RG000010A00A00CZWH1-----06', color:'Bạch Kim', size:6, weight:'4.0g', stone:'Trắng', stock:10, price:8500000, wholesalePrice:8075000 },
+      { sku:'PT0RG000010A00A00CZWH1-----07', color:'Bạch Kim', size:7, weight:'4.2g', stone:'Trắng', stock:8,  price:9000000, wholesalePrice:8550000 },
+      { sku:'PT0RG000010A00A00CZWH1-----08', color:'Bạch Kim', size:8, weight:'4.5g', stone:'Trắng', stock:6,  price:9500000, wholesalePrice:9025000 },
+    ],
+  },
+  {
+    id: 11, name: 'Dây Chuyền Bạch Kim Mặt Oval',
+    drawingNo: 'NE000011A00',
+    badge: 'Có sẵn', category: 'day-chuyen', priceRange: '12.000.000đ – 14.000.000đ',
+    image: 'chain_v2',
+    specs: { group: 'Dây chuyền', metal: 'Bạch Kim Pt950', weight: '7.0-8.0g', materialId: 'bachkim' },
+    versions: [
+      { id: 'v1', name: 'Mặt Oval',   code: 'NE000011B01', image: 'chain_v2', desc: 'Mặt hình oval thanh lịch' },
+      { id: 'v2', name: 'Mặt Tròn',   code: 'NE000011B02', image: 'chain_v1', desc: 'Mặt hình tròn cổ điển' },
+    ],
+    variants: [
+      { sku:'PT0NE000011A00A00----------40', color:'Bạch Kim', size:40, weight:'7.0g', stone:'Không', stock:8,  price:12000000, wholesalePrice:11400000 },
+      { sku:'PT0NE000011A00A00----------42', color:'Bạch Kim', size:42, weight:'7.5g', stone:'Không', stock:6,  price:13000000, wholesalePrice:12350000 },
+      { sku:'PT0NE000011A00A00----------45', color:'Bạch Kim', size:45, weight:'8.0g', stone:'Không', stock:4,  price:14000000, wholesalePrice:13300000 },
+    ],
+  },
+  // ── KIM CƯƠNG ─────────────────────────────────────
+  {
+    id: 12, name: 'Nhẫn Kim Cương Solitaire',
+    drawingNo: 'RG000012A00',
+    badge: 'Cao cấp', category: 'nhan', priceRange: '45.000.000đ – 80.000.000đ',
+    image: 'ring_v1',
+    specs: { group: 'Nhẫn', metal: 'Vàng Trắng 18K + Kim Cương', weight: '3.5-4.0g', materialId: 'kimcuong' },
+    versions: [
+      { id: 'v1', name: '0.3 Carat', code: 'RG000012B01', image: 'ring_v1', desc: 'Kim cương 0.3ct GIA' },
+      { id: 'v2', name: '0.5 Carat', code: 'RG000012B02', image: 'ring_v2', desc: 'Kim cương 0.5ct GIA' },
+      { id: 'v3', name: '1.0 Carat', code: 'RG000012B03', image: 'ring_v3', desc: 'Kim cương 1.0ct GIA' },
+    ],
+    variants: [
+      { sku:'GW0RG000012A00A00DI001-----06', color:'Vàng Trắng', size:6, weight:'3.5g', stone:'Kim cương', stock:5,  price:45000000, wholesalePrice:42750000 },
+      { sku:'GW0RG000012A00A00DI001-----07', color:'Vàng Trắng', size:7, weight:'3.7g', stone:'Kim cương', stock:4,  price:55000000, wholesalePrice:52250000 },
+      { sku:'GW0RG000012A00A00DI001-----08', color:'Vàng Trắng', size:8, weight:'4.0g', stone:'Kim cương', stock:3,  price:80000000, wholesalePrice:76000000 },
+      { sku:'GY0RG000012A00A00DI001-----07', color:'Vàng 18K',   size:7, weight:'3.7g', stone:'Kim cương', stock:3,  price:50000000, wholesalePrice:47500000 },
+    ],
+  },
+  {
+    id: 13, name: 'Dây Chuyền Kim Cương Tennis',
+    drawingNo: 'NE000013A00',
+    badge: 'Cao cấp', category: 'day-chuyen', priceRange: '120.000.000đ – 200.000.000đ',
+    image: 'chain_v1',
+    specs: { group: 'Dây chuyền', metal: 'Vàng Trắng 18K + Kim Cương', weight: '10.0-14.0g', materialId: 'kimcuong' },
+    versions: [
+      { id: 'v1', name: '2 Carat Total', code: 'NE000013B01', image: 'chain_v1', desc: 'Tổng 2ct kim cương thiên nhiên' },
+      { id: 'v2', name: '3 Carat Total', code: 'NE000013B02', image: 'chain_v2', desc: 'Tổng 3ct kim cương thiên nhiên' },
+    ],
+    variants: [
+      { sku:'GW0NE000013A00A00DI001-----40', color:'Vàng Trắng', size:40, weight:'10.0g', stone:'Kim cương', stock:3, price:120000000, wholesalePrice:114000000 },
+      { sku:'GW0NE000013A00A00DI001-----42', color:'Vàng Trắng', size:42, weight:'12.0g', stone:'Kim cương', stock:2, price:160000000, wholesalePrice:152000000 },
+      { sku:'GW0NE000013A00A00DI001-----45', color:'Vàng Trắng', size:45, weight:'14.0g', stone:'Kim cương', stock:2, price:200000000, wholesalePrice:190000000 },
+    ],
+  },
+  {
+    id: 14, name: 'Bông Tai Kim Cương Stud',
+    drawingNo: 'ER000014A00',
+    badge: 'Cao cấp', category: 'bong-tai', priceRange: '30.000.000đ – 60.000.000đ',
+    image: 'earring_v2',
+    specs: { group: 'Bông tai', metal: 'Vàng Trắng 18K + Kim Cương', weight: '1.5g', materialId: 'kimcuong' },
+    versions: [
+      { id: 'v1', name: '0.2ct/viên', code: 'ER000014B01', image: 'earring_v2', desc: 'Mỗi bông 0.2ct GIA' },
+      { id: 'v2', name: '0.5ct/viên', code: 'ER000014B02', image: 'earring_v1', desc: 'Mỗi bông 0.5ct GIA' },
+    ],
+    variants: [
+      { sku:'GW0ER000014A00A00DI001-----00', color:'Vàng Trắng', size:0, weight:'1.5g', stone:'Kim cương', stock:6, price:30000000, wholesalePrice:28500000 },
+      { sku:'GY0ER000014A00A00DI001-----00', color:'Vàng 18K',   size:0, weight:'1.5g', stone:'Kim cương', stock:4, price:35000000, wholesalePrice:33250000 },
+    ],
+  },
+  {
+    id: 15, name: 'Lắc Tay Kim Cương Eternity',
+    drawingNo: 'BE000015A00',
+    badge: 'Cao cấp', category: 'vong-tay', priceRange: '85.000.000đ – 130.000.000đ',
+    image: 'bracelet_v2',
+    specs: { group: 'Lắc tay', metal: 'Bạch Kim Pt950 + Kim Cương', weight: '8.0-10.0g', materialId: 'kimcuong' },
+    versions: [
+      { id: 'v1', name: 'Full Eternity',  code: 'BE000015B01', image: 'bracelet_v2', desc: 'Kim cương vòng quanh trọn vẹn' },
+      { id: 'v2', name: 'Half Eternity',  code: 'BE000015B02', image: 'bracelet_v1', desc: 'Kim cương nửa vòng' },
+    ],
+    variants: [
+      { sku:'PT0BE000015A00A00DI001-----14', color:'Bạch Kim', size:14, weight:'8.0g',  stone:'Kim cương', stock:3, price:85000000,  wholesalePrice:80750000 },
+      { sku:'PT0BE000015A00A00DI001-----16', color:'Bạch Kim', size:16, weight:'10.0g', stone:'Kim cương', stock:2, price:130000000, wholesalePrice:123500000 },
+    ],
+  },
 ];
 
 // ═══════════════════════════════════════════════════
@@ -200,12 +311,11 @@ const PRODUCTS = [
 // ═══════════════════════════════════════════════════
 let selectedCustomer = null;
 let selectedMaterial = null;
-let selectedPurity   = null;
 let cart = [];
 
 // Multi-order state
 let orders = [
-  { id: 1, cart: [], material: null, purity: null },
+  { id: 1, cart: [], material: null },
 ];
 let activeOrderId = 1;
 let orderSeq = 1;
@@ -217,13 +327,11 @@ function saveOrderState() {
   if (!o) return;
   o.cart = cart;
   o.material = selectedMaterial;
-  o.purity = selectedPurity;
 }
 
 function loadOrderState(order) {
   cart = order.cart;
   selectedMaterial = order.material;
-  selectedPurity = order.purity;
 }
 
 function switchOrder(id) {
@@ -238,7 +346,7 @@ function switchOrder(id) {
 function addNewOrder() {
   saveOrderState();
   orderSeq++;
-  const newOrder = { id: orderSeq, cart: [], material: null, purity: null, customName: null };
+  const newOrder = { id: orderSeq, cart: [], material: null, customName: null };
   orders.push(newOrder);
   activeOrderId = orderSeq;
   loadOrderState(newOrder);
@@ -257,7 +365,6 @@ function duplicateOrder(id, e) {
     id: orderSeq,
     cart: source.cart.map(item => ({ ...item })),
     material: source.material,
-    purity: source.purity,
     customName: srcName + ' (bản sao)',
   };
   orders.push(newOrder);
@@ -368,20 +475,19 @@ function renderSubHeader() {
     const isActive = o.id === activeOrderId;
     const itemCount = o.cart.length;
     const matIcon = o.material?.icon || '';
-    const purTag = o.purity?.tag || '';
     const label = o.customName || `Đặt hàng ${orders.indexOf(o) + 1}`;
     return `
       <button onclick="onTabClick(event, ${o.id})" class="sub-tab${isActive ? ' active' : ''}">
         <span>${label}</span>
         ${itemCount > 0 ? `<span class="sub-tab-badge">${itemCount}</span>` : ''}
-        ${matIcon && purTag ? `<span class="sub-tab-meta">${matIcon}${purTag}</span>` : ''}
+        ${matIcon ? `<span class="sub-tab-meta">${matIcon}</span>` : ''}
       </button>`;
   }).join('');
 
   const matPurHtml = selectedMaterial ? `
     <div class="sub-chips">
-      <button class="sub-chip" onclick="openMaterialModal()" title="Đổi nguyên liệu & tuổi">
-        ${selectedMaterial.icon} ${selectedMaterial.name}${selectedPurity ? ' · ' + selectedPurity.tag : ''}
+      <button class="sub-chip" onclick="openMaterialModal()" title="Đổi nguyên liệu">
+        ${selectedMaterial.icon} ${selectedMaterial.name}
         <span style="margin-left:4px;opacity:.5;font-size:10px;">✎</span>
       </button>
     </div>` : '';
@@ -420,12 +526,14 @@ const fmt = n => new Intl.NumberFormat('vi-VN').format(n) + 'đ';
 const getColorDot = color => (COLOR_META[color] || { dot: '#9CA3AF' }).dot;
 
 const STONE_COLOR_MAP = {
-  'CZ Trắng':   { bg: '#F8F8F8',  border: '#D1D5DB' },
-  'CZ Hồng':    { bg: '#F9A8D4',  border: '#EC4899' },
-  'Đá CZ':      { bg: '#93C5FD',  border: '#3B82F6' },
-  'Đá Ruby':    { bg: '#EF4444',  border: '#B91C1C' },
-  'Kim cương':  { bg: '#E0F2FE',  border: '#7DD3FC' },
-  'Ngọc Trai':  { bg: '#FEF9C3',  border: '#FDE047' },
+  'Trắng':       { bg: '#F8F8F8',  border: '#D1D5DB' },
+  'Hồng':        { bg: '#F9A8D4',  border: '#EC4899' },
+  'Đỏ':          { bg: '#EF4444',  border: '#B91C1C' },
+  'Xanh':        { bg: '#93C5FD',  border: '#3B82F6' },
+  'Tím':         { bg: '#C4B5FD',  border: '#7C3AED' },
+  'Vàng':        { bg: '#FDE68A',  border: '#F59E0B' },
+  'Trắng Ngọc':  { bg: '#FEF9C3',  border: '#FDE047' },
+  'Kim cương':   { bg: '#E0F2FE',  border: '#7DD3FC' },
 };
 function getStoneColor(stone) {
   if (STONE_COLOR_MAP[stone]) return STONE_COLOR_MAP[stone];
@@ -656,14 +764,12 @@ function addCartItem(productId, name, drawingNo, variantSku, color, size, qty, p
   else {
     const prod = PRODUCTS.find(p => p.id === productId);
     const matId = prod?.specs?.materialId || selectedMaterial?.id || 'bac';
-    const purId = prod?.specs?.purityId || selectedPurity?.id || '';
     const mat = MATERIALS.find(m => m.id === matId);
-    const pur = PURITIES[matId]?.find(p => p.id === purId);
     cart.push({
       productId, name, drawingNo, variantSku, color, size, qty, price,
-      materialId: matId, purityId: purId,
-      materialName: mat?.name || '', materialIcon: mat?.icon || '🔩', purityTag: pur?.tag || '',
-      orderMaterial: selectedMaterial?.name || mat?.name || '', orderPurity: selectedPurity?.tag || pur?.tag || '',
+      materialId: matId,
+      materialName: mat?.name || '', materialIcon: mat?.icon || '🔩',
+      orderMaterial: selectedMaterial?.name || mat?.name || '',
     });
   }
 }
@@ -684,13 +790,14 @@ function renderProducts(list) {
     return;
   }
   const mat = selectedMaterial;
-  const pur = selectedPurity;
-  const metalTagColor = mat?.id === 'vang' ? { bg: '#FFF8E1', text: '#B45309', border: '#FCD34D' } : { bg: '#F3F4F6', text: '#374151', border: '#D1D5DB' };
+  const metalTagColor = mat?.id === 'vang' ? { bg: '#FFF8E1', text: '#B45309', border: '#FCD34D' }
+    : mat?.id === 'kimcuong' ? { bg: '#ECFEFF', text: '#0891B2', border: '#67E8F9' }
+    : mat?.id === 'bachkim'  ? { bg: '#FAFAFA', text: '#374151', border: '#BDBDBD' }
+    : { bg: '#F3F4F6', text: '#374151', border: '#D1D5DB' };
 
   grid.innerHTML = list.map(p => {
     const totalQty = cart.filter(i => i.productId === p.id).reduce((s, i) => s + i.qty, 0);
     const metalLabel = p.specs?.metal || '';
-    const purityLabel = pur ? pur.name : (p.specs?.metal || '');
     return `
     <div class="product-card">
       <div class="product-image" style="position:relative;">
@@ -705,7 +812,6 @@ function renderProducts(list) {
         <h3 class="product-name">${p.name}</h3>
         <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px;flex-wrap:wrap;">
           <span style="display:inline-flex;align-items:center;gap:3px;background:${metalTagColor.bg};color:${metalTagColor.text};border:1px solid ${metalTagColor.border};border-radius:6px;padding:2px 7px;font-size:10px;font-weight:700;">${mat?.icon||'🔩'} ${metalLabel}</span>
-          ${pur ? `<span style="background:#EFF6FF;color:#1D4ED8;border:1px solid #BFDBFE;border-radius:6px;padding:2px 7px;font-size:10px;font-weight:700;">${pur.tag}</span>` : ''}
         </div>
         <p class="product-meta">${p.variants.length} biến thể · Tồn ${p.variants.reduce((s,v)=>s+v.stock,0)}</p>
         <p class="product-price" style="color:#0052CC;">${p.priceRange}</p>
@@ -753,9 +859,8 @@ function selectCustomer(id) {
   closeCustomerModal();
   // Reset all orders for new customer
   selectedMaterial = null;
-  selectedPurity   = null;
   cart = [];
-  orders = [{ id: 1, cart: [], material: null, purity: null }];
+  orders = [{ id: 1, cart: [], material: null }];
   activeOrderId = 1;
   orderSeq = 1;
   renderSubHeader();
@@ -1013,7 +1118,7 @@ function updateProductImage() {
       ['DrawingNo (SPU)', pmCurrentProduct.drawingNo],
       ['Nhóm sản phẩm', s.group],
       ['Nguyên liệu', s.metal],
-      stones.length > 0 ? ['Loại đá', stones.join(', ')] : null,
+      stones.length > 0 ? ['Màu đá', stones.join(', ')] : null,
       ['Trọng lượng', s.weight],
     ].filter(Boolean);
     specsEl.innerHTML = `
@@ -1085,7 +1190,7 @@ function renderRetailPanel() {
     </div>
     ${stones.length > 0 && stones[0] !== 'Không' ? `
     <div class="pm-retail-section">
-      <div class="pm-retail-label">💎 Loại đá</div>
+      <div class="pm-retail-label">💎 Màu đá</div>
       <div class="pm-color-pills">
         ${stones.map(s => `
           <div class="pm-color-pill" style="cursor:default;opacity:0.85;">
